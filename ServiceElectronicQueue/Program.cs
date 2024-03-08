@@ -3,12 +3,10 @@ using ServiceElectronicQueue.Models.DataBase;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string connectionString = builder.Configuration.GetConnectionString("ConnectionCompanyDb") ??
+string connectionString = builder.Configuration.GetConnectionString("ConnectionCompanyDb") ?? 
                           throw new InvalidOperationException("Строка подключения ''ConnectionCompanyDb'' не найдена");
-
 builder.Services.AddDbContext<CompanyDbContext>(optionsAction => 
     optionsAction.UseNpgsql(connectionString));
-
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
