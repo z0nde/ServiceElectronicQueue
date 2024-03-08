@@ -1,0 +1,20 @@
+﻿services:
+  serviceelectronicqueue:
+    image: serviceelectronicqueue
+    build:
+      context: .
+      dockerfile: ServiceElectronicQueue/Dockerfile
+    ports:
+      - "443:80"
+  postgresCompanyHost:
+    restart: always
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "PostgresCompanyDb"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      PGDATA: /data/postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgresCompanyDB-open-in-db-data:/var/lib/postgresql/data/
