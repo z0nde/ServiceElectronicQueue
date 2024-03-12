@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using ServiceElectronicQueue.Models.DataBase;
+using ServiceElectronicQueue.Models.DataBaseCompany;
 
 var builder = WebApplication.CreateBuilder(args);
 

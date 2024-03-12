@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ServiceElectronicQueue.Models.DataBase;
-
-public class BranchOffice
+namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
-    [Key]
-    public Guid IdBranchOffice { get; set; }
-    public string Addres { get; set; }
-    public string UniqueKey { get; set; }
+    public class BranchOffice
+    {
+        [Key] public Guid IdBranchOffice { get; set; }
+        public string Addres { get; set; }
+        public string UniqueKey { get; set; }
 
-    public Guid IdOrganization { get; set; }
-    public virtual Organization Organization { get; set; }
+        public Guid IdOrganization { get; set; }
+        public virtual Organization Organization { get; set; }
+    }
 }

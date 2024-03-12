@@ -1,15 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ServiceElectronicQueue.Models.DataBase;
-
-public class CompanyDbContext : DbContext
+namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
-    public DbSet<Organization> Organizations { get; set; }
-    public DbSet<BranchOffice> BranchOffices { get; set; }
-    public DbSet<User> Users { get; set; }
-
-    public CompanyDbContext(DbContextOptions<CompanyDbContext> dbContextOptions) : base(dbContextOptions)
+    public class CompanyDbContext : DbContext
     {
-        Database.EnsureCreated();
+        public DbSet<Organization> Organizations { get; set; }
+        public DbSet<BranchOffice> BranchOffices { get; set; }
+        public DbSet<User> Users { get; set; }
+
+        public CompanyDbContext()
+        { }
+        
+        public CompanyDbContext(DbContextOptions<CompanyDbContext> dbContextOptions) : base(dbContextOptions)
+        {
+            Database.EnsureCreated();
+        }
     }
 }
