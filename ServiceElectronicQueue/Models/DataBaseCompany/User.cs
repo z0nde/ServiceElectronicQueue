@@ -19,6 +19,11 @@ public class User
     public User(string email, string password) => 
         (IdUser, Email, Password) = 
         (Guid.NewGuid(), email, password);
+
+    public User(string email, string password, string role, string surname, string name, string patronymic,
+        string phoneNumber) =>
+        (IdUser, Email, Password, Role, Surname, Name, Patronymic, PhoneNumber) =
+        (Guid.NewGuid(), email, password, role, surname, name, patronymic, phoneNumber);
     
     public Guid IdOrganization { get; set; }
     public virtual Organization Organization { get; set; }
