@@ -44,16 +44,12 @@
             _db.SaveChanges();
         }
         
-        public virtual void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (_disposed)
-            {
-                if (disposing)
-                {
-                    _db.Dispose();
-                }
-                _disposed = true;
-            }
+            if (!_disposed) return;
+            if (disposing)
+                _db.Dispose();
+            _disposed = true;
         }
  
         public void Dispose()

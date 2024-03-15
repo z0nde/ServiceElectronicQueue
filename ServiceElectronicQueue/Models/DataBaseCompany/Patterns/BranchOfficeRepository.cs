@@ -13,7 +13,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             return _db.BranchOffices;
         }
 
-        public BranchOffice GetByIndex(int id)
+        public BranchOffice GetByIndex(Guid id)
         {
             return _db.BranchOffices.Find(id);
         }
@@ -28,7 +28,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             _db.Entry(item).State = EntityState.Modified;
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             BranchOffice branchOffice = _db.BranchOffices.Find(id);
             if (branchOffice != null!)

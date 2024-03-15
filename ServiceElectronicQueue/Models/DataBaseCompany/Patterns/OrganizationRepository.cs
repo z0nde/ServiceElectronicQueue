@@ -13,7 +13,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             return _db.Organizations;
         }
 
-        public Organization GetByIndex(int id)
+        public Organization GetByIndex(Guid id)
         {
             return _db.Organizations.Find(id);
         }
@@ -28,7 +28,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             _db.Entry(item).State = EntityState.Modified;
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             Organization organization = _db.Organizations.Find(id);
             if (organization != null)

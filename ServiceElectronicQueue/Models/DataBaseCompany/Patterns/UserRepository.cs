@@ -13,7 +13,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             return _db.Users;
         }
 
-        public User GetByIndex(int id)
+        public User GetByIndex(Guid id)
         {
             return _db.Users.Find(id);
         }
@@ -28,7 +28,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             _db.Entry(item).State = EntityState.Modified;
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             User user = _db.Users.Find(id);
             if (user != null)

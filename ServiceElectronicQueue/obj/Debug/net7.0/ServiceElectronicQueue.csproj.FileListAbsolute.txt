@@ -1,3 +1,11 @@
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.csproj.AssemblyReference.cache
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.AssemblyInfoInputs.cache
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.AssemblyInfo.cs
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.csproj.CoreCompileInputs.cache
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.RazorAssemblyInfo.cache
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.RazorAssemblyInfo.cs
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net7.0\appsettings.Development.json
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net7.0\appsettings.json
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net7.0\ServiceElectronicQueue.staticwebassets.runtime.json
@@ -11,14 +19,6 @@ C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\D
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net7.0\Npgsql.dll
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net7.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.csproj.AssemblyReference.cache
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.AssemblyInfoInputs.cache
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.AssemblyInfo.cs
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.csproj.CoreCompileInputs.cache
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.RazorAssemblyInfo.cache
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\ServiceElectronicQueue.RazorAssemblyInfo.cs
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\staticwebassets\msbuild.ServiceElectronicQueue.Microsoft.AspNetCore.StaticWebAssets.props
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\staticwebassets\msbuild.build.ServiceElectronicQueue.props
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.ServiceElectronicQueue.props
