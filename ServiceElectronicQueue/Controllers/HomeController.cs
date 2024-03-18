@@ -1,6 +1,10 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using ServiceElectronicQueue.Containers.CompanyDB;
+using ServiceElectronicQueue.DataCheck.Interfaces.UserCheck;
 using ServiceElectronicQueue.Models;
+using ServiceElectronicQueue.Models.DataBaseCompany;
+using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews;
 
 namespace ServiceElectronicQueue.Controllers;
@@ -22,6 +26,16 @@ public class HomeController : Controller
 
     [HttpPost]
     public IActionResult Index(UserForView userForView)
+    {
+        if (ModelState.IsValid)
+        {
+            /*ManagerCreate<UserForView, User> managerCreate = new(new CheckCreate(), userForView, new User(), new UserRepository());
+            managerCreate.Expansion();*/
+        }
+        return View();
+    }
+
+    public IActionResult RegisterOrganization()
     {
         return View();
     }

@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ServiceElectronicQueue.Models.ForViews;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
-    public class User
+    public sealed class User : IModelViewToDb<User, UserForView>
     {
         [Key] public Guid IdUser { get; set; }
         public string Email { get; set; }
@@ -25,6 +26,12 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
             (Guid.NewGuid(), email, password, role, surname, name, patronymic, phoneNumber);
 
         public Guid IdOrganization { get; set; }
-        public virtual Organization Organization { get; set; }
+        public Organization Organization { get; set; }
+
+        public User ToDb(UserForView view)
+        {
+            return new User(view.Email!, view.Password!, view.Role!, 
+                view.Surname!, view.Name!, view.Patronymic!, view.PhoneNumber!);
+        }
     }
 }

@@ -8,6 +8,9 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
 
         public UserRepository(CompanyDbContext context) => _db = context;
 
+        public UserRepository()
+        { }
+
         public IEnumerable<User> GetAll()
         {
             return _db.Users;
