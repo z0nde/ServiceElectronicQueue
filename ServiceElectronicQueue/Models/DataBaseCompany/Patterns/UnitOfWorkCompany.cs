@@ -2,7 +2,7 @@
 {
     public class UnitOfWorkCompany : IDisposable
     {
-        private CompanyDbContext _db = new CompanyDbContext();
+        private readonly CompanyDbContext _db;
         private bool _disposed = false;
         
         private UserRepository _userRepository;
@@ -39,6 +39,8 @@
             }
         }
 
+        public UnitOfWorkCompany(CompanyDbContext db) => _db = db;
+        
         public void Save()
         {
             _db.SaveChanges();

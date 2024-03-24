@@ -1,4 +1,4 @@
-﻿using ServiceElectronicQueue.DataCheck.Interfaces;
+﻿/*using ServiceElectronicQueue.DataCheck.Interfaces;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 
@@ -25,4 +25,4 @@ public class ManagerCreate<T, T1> : UnitOfWorkCompany
             Dispose();
         }
     }
-}
+}*/

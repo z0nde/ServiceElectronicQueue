@@ -14,7 +14,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string Patronymic { get; set; }
         public string PhoneNumber { get; set; }
 
-        public User() => IdUser = Guid.NewGuid();
+        public User()
+        { }
 
         public User(string email, string password) =>
             (IdUser, Email, Password) =
@@ -33,5 +34,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
             return new User(view.Email!, view.Password!, view.Role!, 
                 view.Surname!, view.Name!, view.Patronymic!, view.PhoneNumber!);
         }
+
+        //public override string ToString() => $"{Email}, {Password}, {Role}, {Surname}, {Name}, {Patronymic}, {PhoneNumber}";
     }
 }
