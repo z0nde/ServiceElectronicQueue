@@ -4,59 +4,74 @@ using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews;
+
 //using ServiceElectronicQueue.Containers.CompanyDB;
 
 namespace ServiceElectronicQueue.Controllers
 {
-    public class HomeController : Controller
+    public class LoginRegistrationController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        //private readonly CompanyDbContext _db;
+        private readonly ILogger<LoginRegistrationController> _logger;
         private readonly UnitOfWorkCompany _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger, CompanyDbContext db)
+        public LoginRegistrationController(ILogger<LoginRegistrationController> logger, CompanyDbContext db)
         {
             _unitOfWork = new UnitOfWorkCompany(db);
             _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult UserRegister()
         {
             return View();
         }
-
-        /*[HttpPost]
-        public IActionResult Index(UserForView userForView)
+        
+        [HttpPost]
+        public IActionResult UserRegister(UserRegisterForView userRegisterForView)
         {
-            if (ModelState.IsValid)
-            {
-                ManagerCreate<UserForView, User> managerCreate = new(new CheckCreate(), userForView, new User(), new UserRepository());
-                managerCreate.Expansion();
-            }
-            return RegisterOrganization();
-        }*/
+            if (!ModelState.IsValid) 
+                return View();
+            User user = new();
+            _unitOfWork.UsersRep.Create(user.ToDb(userRegisterForView));
+            //return RedirectToAction("OrganizationRegister");
+            return View();
+        }
+
+        /*[HttpGet]
+        public IActionResult OrganizationRegister()
+        {
+            return View();
+        }
 
         [HttpPost]
-        public IActionResult RegisterOrganization(UserForView userForView)
+        public IActionResult OrganizationRegister(OrganizationForView organizationForView)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) 
                 return View();
-            /*ManagerCreate<UserForView, User> managerCreate = new(new CheckCreate(), userForView, new User(), new UserRepository());
-            managerCreate.Expansion();*/
-
-            //UnitOfWorkCompany unitOfWorkCompany = new();
-            User user = new();
-            _unitOfWork.UsersRep.Create(user.ToDb(userForView));
+            Organization organization = new();
+            _unitOfWork.OrganizationsRep.Create(organization.ToDb(organizationForView));
             return View();
-        }
-
+        }*/
+        
         public IActionResult Privacy()
         {
             return View();
         }
 
+
+        
+        /*public IActionResult OrganizationLogin()
+        {
+            return View();
+        }
+
+        public IActionResult UserLogin()
+        {
+            return View();
+        }*/
+
+        
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

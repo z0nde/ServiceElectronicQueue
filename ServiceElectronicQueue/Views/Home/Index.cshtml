@@ -1,11 +1,11 @@
-﻿@model ServiceElectronicQueue.Models.ForViews.UserForView
+﻿@model ServiceElectronicQueue.Models.ForViews.UserRegisterForView
 
 @{
     ViewData["Title"] = "Home Page";
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Register User";
 }
 
-<form asp-controller="Home" asp-action="RegisterOrganization" method="post">
+<form asp-controller="Home" asp-action="UserRegister" method="post">
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />
@@ -17,6 +17,13 @@
         <input asp-for="Password" class="form-control" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
+    
+    <div class="form-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" class="form-control"/>
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div><br />
+    
     
     <div class="form-group">
         <label asp-for="Role"></label>

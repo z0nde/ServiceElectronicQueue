@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ServiceElectronicQueue.Models.ForViews;
 
-public class UserForView
+public class UserRegisterForView
 {
     [DisplayName("Электронная почта")]
     public string? Email { get; set; }
@@ -11,7 +11,13 @@ public class UserForView
     [DisplayName("Пароль")]
     /*[DataType(DataType.Password)]*/
     public string? Password { get; set; }
+
+    [DisplayName("Повторите пароль")]
+    /*[DataType(DataType.Password)]
+    [Compare("Password", ErrorMessage = "Пароли не совпадают")]*/
+    public string? ConfirmPassword { get; set; }
     
+
     [DisplayName("Роль")]
     public string? Role { get; set; }
     
