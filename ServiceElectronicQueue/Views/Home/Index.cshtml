@@ -1,11 +1,11 @@
-﻿@model ServiceElectronicQueue.Models.ForViews.UserRegisterForView
+﻿@model ServiceElectronicQueue.Models.ForViews.Register.UserRegisterForView
 
 @{
     ViewData["Title"] = "Home Page";
-    ViewData["Title"] = "Register User";
+    ViewData["Title"] = "Index";
 }
 
-<form asp-controller="Home" asp-action="UserRegister" method="post">
+<form asp-controller="Home" asp-action="Index" method="post">
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />

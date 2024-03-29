@@ -3,56 +3,54 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
-using ServiceElectronicQueue.Models.ForViews;
-
-//using ServiceElectronicQueue.Containers.CompanyDB;
+using ServiceElectronicQueue.Models.ForViews.Register;
 
 namespace ServiceElectronicQueue.Controllers
 {
-    public class LoginRegistrationController : Controller
+    public class HomeController : Controller
     {
-        private readonly ILogger<LoginRegistrationController> _logger;
+        private readonly ILogger<HomeController> _logger;
         private readonly UnitOfWorkCompany _unitOfWork;
 
-        public LoginRegistrationController(ILogger<LoginRegistrationController> logger, CompanyDbContext db)
+        public HomeController(ILogger<HomeController> logger, CompanyDbContext db)
         {
             _unitOfWork = new UnitOfWorkCompany(db);
             _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult UserRegister()
+        public IActionResult Index()
         {
             return View();
         }
         
         [HttpPost]
-        public IActionResult UserRegister(UserRegisterForView userRegisterForView)
+        public IActionResult Index(UserRegisterForView userRegisterForView)
         {
             if (!ModelState.IsValid) 
                 return View();
             User user = new();
-            _unitOfWork.UsersRep.Create(user.ToDb(userRegisterForView));
+            //_unitOfWork.UsersRep.Create(user.ToDb(userRegisterForView));
             //return RedirectToAction("OrganizationRegister");
             return View();
         }
 
-        /*[HttpGet]
+        [HttpGet]
         public IActionResult OrganizationRegister()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult OrganizationRegister(OrganizationForView organizationForView)
+        public IActionResult OrganizationRegister(OrganizationRegisterForView organizationForView)
         {
             if (!ModelState.IsValid) 
                 return View();
             Organization organization = new();
             _unitOfWork.OrganizationsRep.Create(organization.ToDb(organizationForView));
             return View();
-        }*/
-        
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -60,7 +58,7 @@ namespace ServiceElectronicQueue.Controllers
 
 
         
-        /*public IActionResult OrganizationLogin()
+        public IActionResult OrganizationLogin()
         {
             return View();
         }
@@ -68,7 +66,7 @@ namespace ServiceElectronicQueue.Controllers
         public IActionResult UserLogin()
         {
             return View();
-        }*/
+        }
 
         
         

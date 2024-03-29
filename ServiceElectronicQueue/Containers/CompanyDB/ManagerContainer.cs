@@ -1,25 +1,26 @@
-﻿using ServiceElectronicQueue.DataCheck.Interfaces;
+﻿/*using System.ComponentModel;
+using ServiceElectronicQueue.DataCheck.Interfaces;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 
 namespace ServiceElectronicQueue.Containers.CompanyDB
 {
-    public class ManagerCreate<T, T1>
-        where T : class //UserForViews
-        where T1 : class //User
+    public class ManagerContainer<TView, TEntity>
+        where TView : class //UserForViews
+        where TEntity : class //User
     {
-        private readonly IDataCheck<T> _check;
-        private readonly T _obj;
-        private readonly IModelViewToDb<T1, T> _toDb;
-        private readonly UnitOfWorkCompany _unitOfWorkCompany;
+        public readonly IDataCheck<TView> _check;
+        public readonly TView _obj;
+        public readonly IModelViewToDb<TEntity, TView> _toDb;
+        public readonly UnitOfWorkCompany _unitOfWorkCompany;
 
-        public ManagerCreate(IDataCheck<T> check, T obj, IModelViewToDb<T1, T> toDb, UnitOfWorkCompany unitOfWorkCompany) =>
+        public ManagerContainer(IDataCheck<TView> check, TView obj, IModelViewToDb<TEntity, TView> toDb, UnitOfWorkCompany unitOfWorkCompany) =>
             (_check, _obj, _toDb, _unitOfWorkCompany) = 
             (check, obj, toDb, unitOfWorkCompany);
 
-        public void MakeContainer()
+        public void MakeContainer(IContainer<TView, TEntity> container)
         {
-            
+            container.Expansion(new ManagerContainer<TView, TEntity>(_check, _obj, _toDb, _unitOfWorkCompany));
         }
     }
-}
+}*/

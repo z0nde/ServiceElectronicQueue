@@ -1,10 +1,10 @@
-﻿@*@model ServiceElectronicQueue.Models.ForViews.OrganizationForView
+﻿@model ServiceElectronicQueue.Models.ForViews.Register.OrganizationRegisterForView
 
 @{
     ViewData["Title"] = "Register organization";
 }
 
-<form asp-controller="LoginRegistration" asp-action="OrganizationRegister" method="post">
+<form asp-controller="Home" asp-action="OrganizationRegister" method="post">
     <div class="form-group">
         <label asp-for="Title"></label>
         <input asp-for="Title" class="form-control" />
@@ -17,5 +17,5 @@
         <span asp-validation-for="Logo" class="text-danger"></span>
     </div><br />
     
-    <button type="submit" class="btn btn-primary">Отправить</button>
-</form>*@
+    <button type="submit" class="btn btn-primary">Войти</button>
+</form>

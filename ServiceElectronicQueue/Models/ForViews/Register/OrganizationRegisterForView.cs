@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace ServiceElectronicQueue.Models.ForViews;
+namespace ServiceElectronicQueue.Models.ForViews.Register;
 
 public class OrganizationRegisterForView
 {

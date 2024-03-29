@@ -7,6 +7,9 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<BranchOffice> BranchOffices { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Services> Services { get; set; }
+        public DbSet<ElectronicQueue> ElectronicQueues { get; set; }
 
         public CompanyDbContext()
         { }

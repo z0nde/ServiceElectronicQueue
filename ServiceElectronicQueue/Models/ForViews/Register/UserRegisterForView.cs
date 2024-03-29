@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace ServiceElectronicQueue.Models.ForViews;
+namespace ServiceElectronicQueue.Models.ForViews.Register;
 
 public class UserRegisterForView
 {
@@ -13,8 +13,8 @@ public class UserRegisterForView
     public string? Password { get; set; }
 
     [DisplayName("Повторите пароль")]
-    /*[DataType(DataType.Password)]
-    [Compare("Password", ErrorMessage = "Пароли не совпадают")]*/
+    [DataType(DataType.Password)]
+    [Compare("Password", ErrorMessage = "Пароли не совпадают")]
     public string? ConfirmPassword { get; set; }
     
 
@@ -31,6 +31,6 @@ public class UserRegisterForView
     public string? Patronymic { get; set; }
     
     [DisplayName("Номер телефона")]
-    /*[DataType(DataType.PhoneNumber)]*/
+    [DataType(DataType.PhoneNumber)]
     public string? PhoneNumber { get; set; }
 }

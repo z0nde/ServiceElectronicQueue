@@ -13,6 +13,11 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+/*if (app.Environment.IsDevelopment())
+{
+    app.UseMigrationsEndPoint();
+}*/
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

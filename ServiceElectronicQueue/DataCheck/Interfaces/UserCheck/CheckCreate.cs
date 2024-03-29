@@ -1,10 +1,11 @@
 ﻿using ServiceElectronicQueue.Models.ForViews;
+using ServiceElectronicQueue.Models.ForViews.Register;
 
 namespace ServiceElectronicQueue.DataCheck.Interfaces.UserCheck
 {
-    public class CheckCreate : IDataCheck<UserForView>
+    public class CheckCreate : IDataCheck<UserRegisterForView>
     {
-        public UserForView? Check(UserForView? obj)
+        public UserRegisterForView? Check(UserRegisterForView? obj)
         {
             return obj is
             {

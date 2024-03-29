@@ -8,6 +8,9 @@
         private UserRepository _userRepository;
         private OrganizationRepository _organizationRepository;
         private BranchOfficeRepository _branchRepository;
+        private RoleRepository _roleRepository;
+        private ServicesRepository _servicesRepository;
+        private ElectronicQueueRepository _electronicQueueRepository;
 
         public UserRepository UsersRep
         {
@@ -36,6 +39,36 @@
                 if (_branchRepository == null)
                     _branchRepository = new BranchOfficeRepository(_db);
                 return _branchRepository;
+            }
+        }
+        
+        public RoleRepository RoleRep
+        {
+            get
+            {
+                if (_roleRepository == null)
+                    _roleRepository = new RoleRepository(_db);
+                return _roleRepository;
+            }
+        }
+        
+        public ServicesRepository ServicesRep
+        {
+            get
+            {
+                if (_servicesRepository == null)
+                    _servicesRepository = new ServicesRepository(_db);
+                return _servicesRepository;
+            }
+        }
+        
+        public ElectronicQueueRepository ElectronicQueueRep
+        {
+            get
+            {
+                if (_electronicQueueRepository == null)
+                    _electronicQueueRepository = new ElectronicQueueRepository(_db);
+                return _electronicQueueRepository;
             }
         }
 
