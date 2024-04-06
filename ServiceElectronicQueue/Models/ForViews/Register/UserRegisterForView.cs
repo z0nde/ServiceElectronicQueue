@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ServiceElectronicQueue.Models.ForViews.Register;
 
-public class UserRegister
+public class UserRegisterForView
 {
     [DisplayName("Электронная почта")]
     public string? Email { get; set; }

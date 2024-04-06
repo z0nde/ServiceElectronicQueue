@@ -11,5 +11,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public BranchOffice BranchOffices { get; set; }
 
         public ICollection<ElectronicQueue> ElectronicQueues { get; set; }
+
+        public Services()
+        { }
     }
 }

@@ -1,8 +1,15 @@
-﻿@model dynamic
+﻿@model ServiceElectronicQueue.Models.ForViews.Account.UserAccountForView
+<div style="text-align: left">
+    <h2>Добро пожаловать, @Model.Name @Model.Patronymic</h2>
+    <button>Логотип</button>
+</div>
 
-@{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
-}
-
-<h2>title</h2>
+<div style="text-align: right">
+    <form asp-controller="Account" asp-action="UserAccountRegisterOrganization" method="post">
+        <button type="submit" class="btn btn-primary">Зарегистрировать организацию</button>
+    </form><br />
+    
+    <form asp-controller="Account" asp-action="UserAccountLoginOrganization" method="post">
+        <button type="submit" class="btn btn-primary">Войти в кабинет организации</button>
+    </form>
+</div>

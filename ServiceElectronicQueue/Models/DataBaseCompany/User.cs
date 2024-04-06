@@ -24,13 +24,18 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         { }
 
         public User(string email, string password) =>
-            (IdUser, Email, Password) =
-            (Guid.NewGuid(), email, password);
+            (Email, Password) =
+            (email, password);
 
-        public User(string email, string password, string surname, string name, string patronymic,
+        public User(string email, string password, Guid role, string surname, string name, string patronymic,
             string phoneNumber) =>
-            (IdUser, Email, Password, Surname, Name, Patronymic, PhoneNumber) =
-            (Guid.NewGuid(), email, password, surname, name, patronymic, phoneNumber);
+            (IdUser, Email, Password, IdRole, Surname, Name, Patronymic, PhoneNumber) =
+            (Guid.NewGuid(), email, password, role, surname, name, patronymic, phoneNumber);
+        
+        public User(Guid idUser, string email, string password, Guid role, string surname, string name, 
+            string patronymic, string phoneNumber) =>
+            (IdUser, Email, Password, IdRole, Surname, Name, Patronymic, PhoneNumber) =
+            (idUser, email, password, role, surname, name, patronymic, phoneNumber);
 
         
 

@@ -9,6 +9,9 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
 
         public virtual ICollection<User> Users { get; set; }
 
+        public Role()
+        { }
+        
         public Role(string role) =>
             (IdRole, Amplua) = (Guid.NewGuid(), role);
     }

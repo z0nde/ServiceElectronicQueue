@@ -5,7 +5,7 @@ using ServiceElectronicQueue.Models.ForViews.Register;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
-    public class Organization : IModelViewToDb<Organization, OrganizationRegisterForView>
+    public class Organization //: IModelViewToDb<Organization, OrganizationRegisterForView>
     {
         [Key] 
         public Guid IdOrganization { get; set; }
@@ -23,9 +23,9 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public Organization(string email, string password, string title, byte[]? logo) =>
             (IdOrganization, Email, Password, Title, Logo) = (Guid.NewGuid(), email, password, title, logo);
 
-        public Organization ToDb(OrganizationRegisterForView view)
+        /*public Organization ToDb(OrganizationRegisterForView view)
         {
             return new Organization(view.Email!, view.Password!, view.Title!, null);
-        }
+        }*/
     }
 }

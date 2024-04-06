@@ -11,8 +11,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public DbSet<Services> Services { get; set; }
         public DbSet<ElectronicQueue> ElectronicQueues { get; set; }
 
-        public CompanyDbContext()
-        { }
+        /*public CompanyDbContext()
+        { }*/
         
         public CompanyDbContext(DbContextOptions<CompanyDbContext> dbContextOptions) : base(dbContextOptions)
         {

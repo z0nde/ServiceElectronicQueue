@@ -8,15 +8,15 @@ services:
     command: []
     entrypoint:
     - "dotnet"
-    - "/app/bin/Debug/net7.0/ServiceElectronicQueue.dll"
+    - "/app/bin/Debug/net8.0/ServiceElectronicQueue.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
-      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net7.0/ServiceElectronicQueue.staticwebassets.runtime.CT.json"
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net8.0/ServiceElectronicQueue.staticwebassets.runtime.CT.json"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
     image: "serviceelectronicqueue:dev"
     ports: []
     volumes:
-    - "C:\\Users\\artem\\.nuget\\packages:/root/.nuget/packages"
+    - "C:\\Users\\artem\\.nuget\\packages:/home/app/.nuget/packages"
     - "C:\\Users\\artem\\RiderProjects\\ServiceElectronicQueue\\ServiceElectronicQueue:/app:rw"
     - "C:\\Users\\artem\\RiderProjects\\ServiceElectronicQueue:/src:rw"
     working_dir: "/app"

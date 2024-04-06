@@ -4,7 +4,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
     public class BranchOffice
     {
-        [Key] public Guid IdBranchOffice { get; set; }
+        [Key] 
+        public Guid IdBranchOffice { get; set; }
         public string Addres { get; set; }
         public string UniqueKey { get; set; }
 

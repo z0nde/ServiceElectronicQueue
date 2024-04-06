@@ -3,9 +3,9 @@ using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Login;
 using ServiceElectronicQueue.Models.ForViews.Register;
 
-namespace ServiceElectronicQueue.DataCheck.Interfaces.UserCheck
+namespace ServiceElectronicQueue.DataCheck
 {
-    public class UserManager //: IDataCheck<UserRegisterForView>
+    public class UserManager : IDisposable
     {
         private readonly UnitOfWorkCompany _unitOfWork;
         
@@ -14,7 +14,7 @@ namespace ServiceElectronicQueue.DataCheck.Interfaces.UserCheck
             _unitOfWork = unitOfWork;
         }
         
-        public UserRegister? CheckRegister(UserRegister? obj)
+        public UserRegisterForView? CheckRegister(UserRegisterForView? obj)
         {
             return obj is
             {
@@ -31,25 +31,32 @@ namespace ServiceElectronicQueue.DataCheck.Interfaces.UserCheck
             } ? obj : null;
         }
 
-        public User RegisterToDb(UserRegister userRegister)
+        public User RegisterToDb(UserRegisterForView obj)
         {
             return new User(
-                userRegister.Email!, 
-                userRegister.Password!, 
+                obj.Email, 
+                obj.Password, 
                 _unitOfWork.RoleRep
                     .GetAll()
-                    .Where(s => s.Amplua == userRegister.Role)
+                    .Where(s => s.Amplua == obj.Role)
                     .Select(s => s.IdRole)
-                    .First(),
-                userRegister.Surname!,
-                userRegister.Name!, 
-                userRegister.Patronymic!,
-                userRegister.PhoneNumber!);
+                    .FirstOrDefault(),
+                obj.Surname,
+                obj.Name, 
+                obj.Patronymic,
+                obj.PhoneNumber);
         }
 
-        public User LoginToDb(UserLoginForView userLoginForView)
+        public User LoginToDb(UserLoginForView obj)
         {
-            return new User(userLoginForView.Email!, userLoginForView.Password!);
+            return new User(obj.Email, obj.Password);
+        }
+
+        
+
+        public void Dispose()
+        {
+            _unitOfWork.Dispose();
         }
     }
 }
