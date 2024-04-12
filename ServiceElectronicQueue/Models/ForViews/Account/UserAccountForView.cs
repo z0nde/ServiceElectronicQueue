@@ -9,4 +9,7 @@ public class UserAccountForView
     
     [DisplayName("Отчество")]
     public string? Patronymic { get; set; }
+    
+    [DisplayName("Роль")]
+    public string? Role { get; set; }
 }

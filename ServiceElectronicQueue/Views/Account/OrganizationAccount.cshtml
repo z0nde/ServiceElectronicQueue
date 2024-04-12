@@ -1,4 +1,5 @@
 ﻿@model ServiceElectronicQueue.Models.ForViews.Account.OrganizationAccountForView
+
 <div style="text-align: left">
     <h2>Компания: @Model.Title</h2>
     <button></button>
@@ -6,7 +7,7 @@
 </div>
 
 <div style="text-align: right">
-    <form asp-controller="Account" asp-action="UserAccountRegisterOrganization" method="post">
-        <button type="submit" class="btn btn-primary">Зарегистрировать организацию</button>
+    <form asp-controller="Account" asp-action="OrganizationAccountRegisterBranchOffice" method="post">
+        <button type="submit" class="btn btn-primary">Зарегистрировать филиал</button>
     </form><br />
 </div>

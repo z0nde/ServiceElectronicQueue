@@ -3,7 +3,7 @@ using ServiceElectronicQueue.Models.ForViews.Register;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
-    public sealed class User //: IModelViewToDb<User, UserRegisterForView>
+    public sealed class User
     {
         [Key] 
         public Guid IdUser { get; set; }
@@ -14,10 +14,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string Patronymic { get; set; }
         public string PhoneNumber { get; set; }
         
-        public Guid IdOrganization { get; set; }
-        public Guid IdRole { get; set; }
+        public Guid? IdOrganization { get; set; }
+        public Organization? Organization { get; set; }
         
-        public Organization Organization { get; set; }
+        public Guid IdRole { get; set; }
         public Role Role { get; set; }
         
         public User()
@@ -27,15 +27,15 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
             (Email, Password) =
             (email, password);
 
-        public User(string email, string password, Guid role, string surname, string name, string patronymic,
+        public User(string email, string password, Guid roleId, string surname, string name, string patronymic,
             string phoneNumber) =>
             (IdUser, Email, Password, IdRole, Surname, Name, Patronymic, PhoneNumber) =
-            (Guid.NewGuid(), email, password, role, surname, name, patronymic, phoneNumber);
+            (Guid.NewGuid(), email, password, roleId, surname, name, patronymic, phoneNumber);
         
-        public User(Guid idUser, string email, string password, Guid role, string surname, string name, 
+        public User(Guid idUser, string email, string password, Guid roleId, string surname, string name, 
             string patronymic, string phoneNumber) =>
             (IdUser, Email, Password, IdRole, Surname, Name, Patronymic, PhoneNumber) =
-            (idUser, email, password, role, surname, name, patronymic, phoneNumber);
+            (idUser, email, password, roleId, surname, name, patronymic, phoneNumber);
 
         
 

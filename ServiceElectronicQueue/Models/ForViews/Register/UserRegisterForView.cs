@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ServiceElectronicQueue.Models.ForViews.Register;
 
@@ -16,10 +17,15 @@ public class UserRegisterForView
     [DataType(DataType.Password)]
     [Compare("Password", ErrorMessage = "Пароли не совпадают")]
     public string? ConfirmPassword { get; set; }
-    
 
+
+    /*public int SelectRoleItem { get; set; }
+    
+    [DisplayName("Роли")] 
+    public IEnumerable<SelectListItem> RoleItems { get; set; }*/
+    
     [DisplayName("Роль")]
-    public string? Role { get; set; }
+    public string Role { get; set; }
     
     [DisplayName("Фамилия")]
     public string? Surname { get; set; }

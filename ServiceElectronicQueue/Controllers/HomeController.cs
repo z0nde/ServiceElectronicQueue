@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceElectronicQueue.DataCheck;
 using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
@@ -11,16 +12,14 @@ namespace ServiceElectronicQueue.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly UnitOfWorkCompany _unitOfWork;
 
         private readonly UserManager _userManager;
         private readonly OrganizationManager _organizationManager;
         
-        public HomeController(ILogger<HomeController> logger, CompanyDbContext db)
+        public HomeController(CompanyDbContext db)
         {
             _unitOfWork = new UnitOfWorkCompany(db);
-            _logger = logger;
             _userManager = new UserManager(_unitOfWork);
             _organizationManager = new OrganizationManager(_unitOfWork);
         }
@@ -32,7 +31,23 @@ namespace ServiceElectronicQueue.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            /*var model = new UserRegisterForView()
+            {
+                RoleItems = new List<SelectListItem>
+                {
+                    new SelectListItem
+                    {
+                        Value = "1",
+                        Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).First()
+                    },
+                    new SelectListItem
+                    {
+                        Value = "2",
+                        Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).Skip(1).First()
+                    }
+                }
+            };*/
+            return View(/*model*/);
         }
         
         /// <summary>
@@ -45,17 +60,25 @@ namespace ServiceElectronicQueue.Controllers
         {
             if (!ModelState.IsValid) 
                 return View();
+            /*userRegisterForView.Role = userRegisterForView.RoleItems
+                .Where(s => s.Value == userRegisterForView.SelectRoleItem.ToString())
+                .Select(s => s.Text)
+                .First();*/
             if (_userManager.CheckRegister(userRegisterForView) != null)
             {
-                //_unitOfWork.UsersRep.Create(_userManager.RegisterToDb(userRegisterForView));
-                
-                var user = _userManager.RegisterToDb(userRegisterForView);
-                return RedirectToAction("UserAccount", "Account", new
+                if (userRegisterForView.Role is "Пользователь организации" or "Пользователь филиала")
                 {
-                    //User = _userManager.RegisterToDb(userRegisterForView)
-                    UserId = user.IdUser, Email = user.Email, Password = user.Password, Role = user.Role,
-                    Surname = user.Surname, Name = user.Name, Patronymic = user.Patronymic, PhoneNumber = user.PhoneNumber
-                });
+                    _unitOfWork.UsersRep.Create(_userManager.RegisterToDb(userRegisterForView));
+                    _unitOfWork.Save();
+                
+                    var user = _userManager.RegisterToDb(userRegisterForView);
+                    return RedirectToAction("UserAccount", "Account", new
+                    {
+                        //User = _userManager.RegisterToDb(userRegisterForView)
+                        UserId = user.IdUser, Email = user.Email, Password = user.Password, Role = user.Role,
+                        Surname = user.Surname, Name = user.Name, Patronymic = user.Patronymic, PhoneNumber = user.PhoneNumber
+                    });
+                }
             }
             return View();
         }
@@ -82,9 +105,24 @@ namespace ServiceElectronicQueue.Controllers
                 return View();
             if (_userManager.CheckLogin(userLoginForView) != null)
             {
-                
-                
-                return RedirectToAction("OrganizationRegister");
+                Guid? userId = _unitOfWork.UsersRep
+                    .GetAll()
+                    .ToList()
+                    .Where(s => s.Email == userLoginForView.Email && s.Password == userLoginForView.Password)
+                    .Select(s => s.IdUser)
+                    .FirstOrDefault();
+                if (userId != null)
+                {
+                    User? user = _unitOfWork.UsersRep.GetByIndex((Guid)userId);
+                    if (user != null)
+                    { 
+                        return RedirectToAction("UserAccount", "Account", new
+                        {
+                            UserId = user.IdUser, Email = user.Email, Password = user.Password, Role = user.Role,
+                            Surname = user.Surname, Name = user.Name, Patronymic = user.Patronymic, PhoneNumber = user.PhoneNumber
+                        });
+                    }
+                }
             }
             return View();
         }
@@ -145,6 +183,19 @@ namespace ServiceElectronicQueue.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult ValidationRoles()
+        {
+            Role role1 = new Role("Пользователь организации");
+            Role role2 = new Role("Пользователь филиала");
+            _unitOfWork.RoleRep.Create(role1);
+            _unitOfWork.Save();
+            _unitOfWork.RoleRep.Create(role2);
+            _unitOfWork.Save();
+            _unitOfWork.Dispose();
+            return RedirectToAction("Index", "Home");
         }
         
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

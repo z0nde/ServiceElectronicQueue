@@ -5,17 +5,19 @@ using ServiceElectronicQueue.Models.ForViews.Register;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
-    public class Organization //: IModelViewToDb<Organization, OrganizationRegisterForView>
+    public class Organization
     {
         [Key] 
         public Guid IdOrganization { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string Title { get; set; }
+        public string? UniqueKey { get; set; }
         public byte[]? Logo { get; set; }
         
-        public virtual ICollection<BranchOffice> Branches { get; set; }
         public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<BranchOffice> Branches { get; set; }
+        
 
         public Organization() =>
             IdOrganization = Guid.NewGuid();

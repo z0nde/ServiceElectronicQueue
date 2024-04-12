@@ -15,7 +15,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
 
         public Role GetByIndex(Guid id)
         {
-            return _db.Roles.Find(id);
+            return _db.Roles
+                .Where(s => s.IdRole == id)
+                .Select(s => s)
+                .First();
         }
 
         public void Create(Role item)

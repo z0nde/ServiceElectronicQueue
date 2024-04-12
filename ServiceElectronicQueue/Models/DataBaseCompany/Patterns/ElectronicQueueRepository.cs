@@ -15,7 +15,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
 
         public ElectronicQueue GetByIndex(Guid id)
         {
-            return _db.ElectronicQueues.Find(id);
+            return _db.ElectronicQueues
+                .Where(s => s.IdElectronicQueue == id)
+                .Select(s => s)
+                .First();
         }
 
         public void Create(ElectronicQueue item)

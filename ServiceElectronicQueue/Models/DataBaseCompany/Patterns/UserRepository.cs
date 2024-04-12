@@ -18,7 +18,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
 
         public User GetByIndex(Guid id)
         {
-            return _db.Users.Find(id);
+            return _db.Users
+                .Where(s => s.IdUser == id)
+                .Select(s => s)
+                .First();
         }
 
         public void Create(User item)

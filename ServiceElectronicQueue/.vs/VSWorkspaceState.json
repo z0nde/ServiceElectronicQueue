@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\bin",
+    "\\bin\\Debug",
+    "\\Controllers",
+    "\\DataCheck",
+    "\\Models",
+    "\\Models\\ForViews",
+    "\\Models\\ForViews\\Account",
+    "\\Models\\ForViews\\Login",
+    "\\Models\\ForViews\\Register"
+  ],
+  "SelectedNode": "\\Views\\Home\\Index.cshtml",
+  "PreviewInSolutionExplorer": false
+}

@@ -15,7 +15,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
 
         public BranchOffice GetByIndex(Guid id)
         {
-            return _db.BranchOffices.Find(id);
+            return _db.BranchOffices
+                .Where(s => s.IdBranchOffice == id)
+                .Select(s => s)
+                .First();
         }
 
         public void Create(BranchOffice item)

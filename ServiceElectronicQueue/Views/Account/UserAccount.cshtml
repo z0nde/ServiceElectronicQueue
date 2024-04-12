@@ -1,15 +1,34 @@
 ﻿@model ServiceElectronicQueue.Models.ForViews.Account.UserAccountForView
+
 <div style="text-align: left">
     <h2>Добро пожаловать, @Model.Name @Model.Patronymic</h2>
+    <h5>Роль: @Model.Role</h5>
     <button>Логотип</button>
 </div>
 
-<div style="text-align: right">
-    <form asp-controller="Account" asp-action="UserAccountRegisterOrganization" method="post">
-        <button type="submit" class="btn btn-primary">Зарегистрировать организацию</button>
-    </form><br />
+@switch (Model.Role)
+{
+    case "Пользователь организации":
+        <div style="text-align: right">
+            <form asp-controller="Account" asp-action="UserAccountRegisterOrganization" method="post">
+                <button type="submit" class="btn btn-primary">Зарегистрировать организацию</button>
+            </form><br />
     
-    <form asp-controller="Account" asp-action="UserAccountLoginOrganization" method="post">
-        <button type="submit" class="btn btn-primary">Войти в кабинет организации</button>
-    </form>
-</div>
+            <form asp-controller="Account" asp-action="UserAccountLoginOrganization" method="post">
+                <button type="submit" class="btn btn-primary">Войти в кабинет организации</button>
+            </form>
+        </div> 
+    break;
+        
+    case "Пользователь филиала":
+        <div style="text-align: right">
+            <form asp-controller="Account" asp-action="UserAccountLoginBranchOffice" method="post">
+                <button type="submit" class="btn btn-primary">Зарегистрировать организацию</button>
+            </form><br />
+    
+            <form asp-controller="Account" asp-action="UserAccountLoginBranchOffice" method="post">
+                <button type="submit" class="btn btn-primary">Войти в кабинет организации</button>
+            </form>
+        </div>
+    break;
+}

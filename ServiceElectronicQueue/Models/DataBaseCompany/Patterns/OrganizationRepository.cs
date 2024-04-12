@@ -15,7 +15,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
 
         public Organization GetByIndex(Guid id)
         {
-            return _db.Organizations.Find(id);
+            return _db.Organizations
+                .Where(s => s.IdOrganization == id)
+                .Select(s => s)
+                .First();
         }
 
         public void Create(Organization item)
