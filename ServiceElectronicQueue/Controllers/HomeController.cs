@@ -16,6 +16,7 @@ namespace ServiceElectronicQueue.Controllers
 
         private readonly UserManager _userManager;
         private readonly OrganizationManager _organizationManager;
+        private User _user;
         
         public HomeController(CompanyDbContext db)
         {
@@ -71,11 +72,12 @@ namespace ServiceElectronicQueue.Controllers
                     /*_unitOfWork.UsersRep.Create(_userManager.RegisterToDb(userRegisterForView));
                     _unitOfWork.Save();*/
                 
-                    var user = _userManager.RegisterToDb(userRegisterForView);
+                    //var user = _userManager.RegisterToDb(userRegisterForView);
                     return RedirectToAction("UserAccount", "Account", new
                     {
-                        UserId = user.IdUser, Email = user.Email, Password = user.Password, Role = user.Role,
-                        Surname = user.Surname, Name = user.Name, Patronymic = user.Patronymic, PhoneNumber = user.PhoneNumber
+                        UserId = Guid.NewGuid(), Email = userRegisterForView.Email, Password = userRegisterForView.Password, 
+                        Role = userRegisterForView.Role, Surname = userRegisterForView.Surname, Name = userRegisterForView.Name, 
+                        Patronymic = userRegisterForView.Patronymic, PhoneNumber = userRegisterForView.PhoneNumber
                     });
                 }
             }
@@ -131,8 +133,10 @@ namespace ServiceElectronicQueue.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult OrganizationRegister()
+        public IActionResult OrganizationRegister(Guid userId, string email, string password, Guid role,
+            string surname, string name, string patronymic, string phoneNumber)
         {
+            _user = new User(userId, email, password, role, surname, name, patronymic, phoneNumber);
             return View();
         }
 
@@ -148,9 +152,19 @@ namespace ServiceElectronicQueue.Controllers
                 return View();
             if (_organizationManager.CheckRegister(organizationForView) != null)
             {
-                //_unitOfWork.OrganizationsRep.Create(_organizationManager.RegisterToDb(organizationForView));
-                //логика входа
-                return RedirectToAction("OrganizationRegister");
+                Organization organization = new Organization();
+                organization = _organizationManager.RegisterToDb(organizationForView);
+                _unitOfWork.OrganizationsRep.Create(organization); //
+                _unitOfWork.Save();
+                
+                _user.IdOrganization = organization.IdOrganization;
+                _unitOfWork.UsersRep.Create(_user);
+                _unitOfWork.Save();
+                return RedirectToAction("OrganizationAccount", "Account", new
+                {
+                    OrganizationId = organization.IdOrganization, Email = organization.Email, Password = organization.Password,
+                    Title = organization.Title
+                });
             }
             return View();
         }

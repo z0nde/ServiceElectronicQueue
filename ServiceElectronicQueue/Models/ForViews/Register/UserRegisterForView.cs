@@ -25,7 +25,7 @@ public class UserRegisterForView
     public IEnumerable<SelectListItem> RoleItems { get; set; }*/
     
     [DisplayName("Роль")]
-    public string Role { get; set; }
+    public string? Role { get; set; }
     
     [DisplayName("Фамилия")]
     public string? Surname { get; set; }

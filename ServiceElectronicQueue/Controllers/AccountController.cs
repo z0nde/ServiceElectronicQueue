@@ -39,6 +39,20 @@ namespace ServiceElectronicQueue.Controllers
         public IActionResult UserAccount(Guid userId, string email, string password, string role,
             string surname, string name, string patronymic, string phoneNumber)
         {
+            _user = new User(
+                userId, 
+                email, 
+                password, 
+                _unitOfWork.RoleRep
+                    .GetAll()
+                    .Where(s => s.Amplua == role)
+                    .Select(s => s.IdRole)
+                    .First(), 
+                surname, 
+                name, 
+                patronymic, 
+                phoneNumber);
+            
             var model = new UserAccountForView
             {
                 Name = name,
@@ -56,7 +70,11 @@ namespace ServiceElectronicQueue.Controllers
         [HttpPost]
         public IActionResult UserAccountRegisterOrganization()
         {
-            return RedirectToAction("OrganizationRegister", "Home");
+            return RedirectToAction("OrganizationRegister", "Home", new
+            {
+                UserId = _user.IdUser, Email = _user.Email, Password = _user.Password, Role = _user.Role,
+                Surname = _user.Surname, Name = _user.Name, Patronymic = _user.Patronymic, PhoneNumber = _user.PhoneNumber
+            });
         }
         
         /// <summary>
