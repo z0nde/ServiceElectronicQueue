@@ -154,7 +154,7 @@ namespace ServiceElectronicQueue.Controllers
             {
                 Organization organization = new Organization();
                 organization = _organizationManager.RegisterToDb(organizationForView);
-                _unitOfWork.OrganizationsRep.Create(organization); //
+                _unitOfWork.OrganizationsRep.Create(organization); 
                 _unitOfWork.Save();
                 
                 _user.IdOrganization = organization.IdOrganization;
@@ -162,8 +162,10 @@ namespace ServiceElectronicQueue.Controllers
                 _unitOfWork.Save();
                 return RedirectToAction("OrganizationAccount", "Account", new
                 {
-                    OrganizationId = organization.IdOrganization, Email = organization.Email, Password = organization.Password,
-                    Title = organization.Title
+                    OrganizationId = organization.IdOrganization, EmailOrg = organization.Email, 
+                    PasswordOrg = organization.Password, Title = organization.Title, 
+                    UserId = _user.IdUser, EmailUser = _user.Email, Role = _user.IdRole, Surname = _user.Surname,
+                    Name = _user.Name, Patronymic = _user.Patronymic, PhoneNumber = _user.PhoneNumber
                 });
             }
             return View();

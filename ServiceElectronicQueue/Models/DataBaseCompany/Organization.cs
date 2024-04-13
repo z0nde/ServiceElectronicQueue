@@ -22,9 +22,12 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public Organization() =>
             IdOrganization = Guid.NewGuid();
 
-        public Organization(string email, string password, string title, byte[]? logo) =>
-            (IdOrganization, Email, Password, Title, Logo) = (Guid.NewGuid(), email, password, title, logo);
+        public Organization(string email, string password, string title, string? uniqueKey, byte[]? logo) =>
+            (IdOrganization, Email, Password, Title, UniqueKey, Logo) = (Guid.NewGuid(), email, password, title, uniqueKey, logo);
 
+        public Organization(Guid idOrganization, string email, string password, string title, string? uniqueKey, byte[]? logo) =>
+            (IdOrganization, Email, Password, Title, UniqueKey, Logo) = (idOrganization, email, password, title, uniqueKey, logo);
+        
         /*public Organization ToDb(OrganizationRegisterForView view)
         {
             return new Organization(view.Email!, view.Password!, view.Title!, null);

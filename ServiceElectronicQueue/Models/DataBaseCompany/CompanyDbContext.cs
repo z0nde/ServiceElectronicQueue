@@ -16,7 +16,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         
         public CompanyDbContext(DbContextOptions<CompanyDbContext> dbContextOptions) : base(dbContextOptions)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
     }
 }

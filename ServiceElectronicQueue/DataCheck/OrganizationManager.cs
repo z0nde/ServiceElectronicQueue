@@ -32,7 +32,7 @@ public class OrganizationManager : IDisposable
 
     public Organization RegisterToDb(OrganizationRegisterForView obj)
     {
-        return new Organization(obj.Email, obj.Password, obj.Title, null);
+        return new Organization(obj.Email, obj.Password, obj.Title, null, null);
     }
 
     public User LoginToDb(UserLoginForView obj)

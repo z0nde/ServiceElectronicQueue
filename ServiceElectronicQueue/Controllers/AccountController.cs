@@ -13,6 +13,7 @@ namespace ServiceElectronicQueue.Controllers
 
         private readonly UserManager _userManager;
         private User _user;
+        private Organization _organization;
 
         public AccountController(CompanyDbContext db)
         {
@@ -115,20 +116,21 @@ namespace ServiceElectronicQueue.Controllers
         
         
         [HttpGet]
-        public IActionResult OrganizationAccount()
+        public IActionResult OrganizationAccount(Guid orgId, string emailOrg, string passwordOrg, string title, Guid userId,
+            string emailUser, string passwordUser, Guid roleId, string surname, string name, string patronymic, string phoneNumber)
         {
+            _organization = new Organization(orgId, emailOrg, passwordOrg, title, null, null);
+            Random rnd = new();
+            string uniqueKey = Convert.ToString(rnd.Next(0, 99999999));
+            _organization.UniqueKey = uniqueKey;
+            _unitOfWork.OrganizationsRep.Update(_organization);
             return View();
         }
 
         [HttpPost]
-        public IActionResult OrganizationAccountRegisterBranchOffice()
+        public IActionResult OrganizationAccountGenerateUniqueKey()
         {
-            return RedirectToAction();
-        }
-
-        [HttpPost]
-        public IActionResult OrganizationAccountLoginBranchOffice()
-        {
+            
             return RedirectToAction();
         }
 
