@@ -15,8 +15,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string? UniqueKey { get; set; }
         public byte[]? Logo { get; set; }
         
-        public virtual ICollection<User> Users { get; set; }
-        public virtual ICollection<BranchOffice> Branches { get; set; }
+        public ICollection<User> Users { get; set; }
+        public ICollection<BranchOffice> Branches { get; set; }
         
 
         public Organization() =>

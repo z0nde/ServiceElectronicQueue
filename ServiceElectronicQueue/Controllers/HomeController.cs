@@ -68,13 +68,12 @@ namespace ServiceElectronicQueue.Controllers
             {
                 if (userRegisterForView.Role is "Пользователь организации" or "Пользователь филиала")
                 {
-                    _unitOfWork.UsersRep.Create(_userManager.RegisterToDb(userRegisterForView));
-                    _unitOfWork.Save();
+                    /*_unitOfWork.UsersRep.Create(_userManager.RegisterToDb(userRegisterForView));
+                    _unitOfWork.Save();*/
                 
                     var user = _userManager.RegisterToDb(userRegisterForView);
                     return RedirectToAction("UserAccount", "Account", new
                     {
-                        //User = _userManager.RegisterToDb(userRegisterForView)
                         UserId = user.IdUser, Email = user.Email, Password = user.Password, Role = user.Role,
                         Surname = user.Surname, Name = user.Name, Patronymic = user.Patronymic, PhoneNumber = user.PhoneNumber
                     });
@@ -185,7 +184,7 @@ namespace ServiceElectronicQueue.Controllers
             return View();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public IActionResult ValidationRoles()
         {
             Role role1 = new Role("Пользователь организации");
@@ -196,7 +195,7 @@ namespace ServiceElectronicQueue.Controllers
             _unitOfWork.Save();
             _unitOfWork.Dispose();
             return RedirectToAction("Index", "Home");
-        }
+        }*/
         
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

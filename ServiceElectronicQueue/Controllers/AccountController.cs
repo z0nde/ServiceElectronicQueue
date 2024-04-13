@@ -36,19 +36,14 @@ namespace ServiceElectronicQueue.Controllers
         /// <param name="phoneNumber"></param>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult UserAccount(Guid userId, string email, string password, Guid role,
+        public IActionResult UserAccount(Guid userId, string email, string password, string role,
             string surname, string name, string patronymic, string phoneNumber)
         {
-            _user = new User(userId, email, password, role, surname, name, patronymic, phoneNumber);
             var model = new UserAccountForView
             {
                 Name = name,
                 Patronymic = patronymic,
-                Role = _unitOfWork.RoleRep
-                    .GetAll()
-                    .Where(s => s.IdRole == role)
-                    .Select(s => s.Amplua)
-                    .FirstOrDefault()
+                Role = role
             };
             return View(model);
         }

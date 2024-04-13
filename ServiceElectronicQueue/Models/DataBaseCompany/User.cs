@@ -14,8 +14,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string Patronymic { get; set; }
         public string PhoneNumber { get; set; }
         
-        public Guid? IdOrganization { get; set; }
-        public Organization? Organization { get; set; }
+        public Guid IdOrganization { get; set; }
+        public Organization Organization { get; set; }
         
         public Guid IdRole { get; set; }
         public Role Role { get; set; }
