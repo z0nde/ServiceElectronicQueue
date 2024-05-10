@@ -4,7 +4,7 @@ using ServiceElectronicQueue.Models.DataBaseCompany;
 var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder.Configuration.GetConnectionString("ConnectionCompanyDb") ?? 
-                          throw new InvalidOperationException("Строка подключения ''ConnectionCompanyDb'' не найдена");
+                          throw new InvalidOperationException("Строка подключения ''ConnectionCompanyDB'' не найдена");
 builder.Services.AddDbContext<CompanyDbContext>(optionsAction => 
     optionsAction.UseNpgsql(connectionString));
 
@@ -28,6 +28,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(name: "default", pattern: "{controller=UserAuth}/{action=UserRegister}/{id?}");
 
 app.Run();

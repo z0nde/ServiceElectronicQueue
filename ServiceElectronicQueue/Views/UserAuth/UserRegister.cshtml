@@ -5,7 +5,7 @@
     ViewData["Title"] = "Index";
 }
 
-@*<form asp-controller="UserAuth" asp-action="UserRegister" method="post">
+<form asp-controller="UserAuth" asp-action="UserRegister" method="post">
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />
@@ -25,11 +25,11 @@
     </div><br />
     
     
-    $1$<form asp-controller="Home" asp-action="Index" method="get">
+    @*<form asp-controller="Home" asp-action="Index" method="get">
         <select asp-for="SelectRoleItem" asp-items="@Model.RoleItems">
             <option value=""> Выберете элемент: </option>
         </select>
-    </form>#1#
+    </form>*@
     
     <div class="form-group">
         <label asp-for="Role"></label>
@@ -62,12 +62,12 @@
     </div><br />
     
     <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-</form>*@
+</form>
 
 @*кнопка для добавления ролей по умолчанию*@
-<form asp-controller="UserAuth" asp-action="ValidationRoles" method="post">
+@*<form asp-controller="UserAuth" asp-action="ValidationRoles" method="post">
     <button type="submit" class="btn btn-primary">добавить роли</button>
-</form>
+</form>*@
 
 @*отображение роли*@
 @*@model ServiceElectronicQueue.Models.DataBaseCompany.Role

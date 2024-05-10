@@ -5,7 +5,7 @@
     ViewData["Title"] = "Login User";
 }
 
-<form asp-controller="Home" asp-action="UserLogin" method="post">
+<form asp-controller="UserAuth" asp-action="UserLogin" method="post">
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />

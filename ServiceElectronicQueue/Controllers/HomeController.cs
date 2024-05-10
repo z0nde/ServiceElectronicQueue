@@ -17,7 +17,7 @@ namespace ServiceElectronicQueue.Controllers
         private readonly UserManager _userManager;
         private readonly OrganizationManager _organizationManager;
         private User _user;
-        
+
         public HomeController(CompanyDbContext db)
         {
             _unitOfWork = new UnitOfWorkCompany(db);
@@ -25,7 +25,7 @@ namespace ServiceElectronicQueue.Controllers
             _organizationManager = new OrganizationManager(_unitOfWork);
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Регистрация пользователя, GET
         /// </summary>
         /// <returns></returns>
@@ -47,44 +47,73 @@ namespace ServiceElectronicQueue.Controllers
                         Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).Skip(1).First()
                     }
                 }
-            };*/
-            return View(/*model*/);
+            };#1#
+            return View( /*model#1#);
         }
-        
+
+        /// <summary>
+        /// Регистрация пользователя, GET
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult UserRegister()
+        {
+            /*var model = new UserRegisterForView()
+            {
+                RoleItems = new List<SelectListItem>
+                {
+                    new SelectListItem
+                    {
+                        Value = "1",
+                        Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).First()
+                    },
+                    new SelectListItem
+                    {
+                        Value = "2",
+                        Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).Skip(1).First()
+                    }
+                }
+            };#1#
+            return View( /*model#1#);
+        }
+
         /// <summary>
         /// Регистрация пользователя, POST
         /// </summary>
         /// <param name="userRegisterForView"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Index(UserRegisterForView userRegisterForView)
+        public IActionResult UserRegister(UserRegisterForView userRegisterForView)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return View();
             /*userRegisterForView.Role = userRegisterForView.RoleItems
                 .Where(s => s.Value == userRegisterForView.SelectRoleItem.ToString())
                 .Select(s => s.Text)
-                .First();*/
+                .First();#1#
             if (_userManager.CheckRegister(userRegisterForView) != null)
             {
                 if (userRegisterForView.Role is "Пользователь организации" or "Пользователь филиала")
                 {
                     /*_unitOfWork.UsersRep.Create(_userManager.RegisterToDb(userRegisterForView));
-                    _unitOfWork.Save();*/
-                
+                    _unitOfWork.Save();#1#
+
                     //var user = _userManager.RegisterToDb(userRegisterForView);
-                    return RedirectToAction("UserAccount", "Account", new
+                    return RedirectToAction("UserAccount", "UserAccount", new
                     {
-                        UserId = Guid.NewGuid(), Email = userRegisterForView.Email, Password = userRegisterForView.Password, 
-                        Role = userRegisterForView.Role, Surname = userRegisterForView.Surname, Name = userRegisterForView.Name, 
+                        UserId = Guid.NewGuid(), Email = userRegisterForView.Email,
+                        Password = userRegisterForView.Password,
+                        Role = userRegisterForView.Role, Surname = userRegisterForView.Surname,
+                        Name = userRegisterForView.Name,
                         Patronymic = userRegisterForView.Patronymic, PhoneNumber = userRegisterForView.PhoneNumber
                     });
                 }
             }
-            return View();
-        }
 
-        /// <summary>
+            return View();
+        }*/
+
+        /*/// <summary>
         /// Вход пользователя, GET
         /// </summary>
         /// <returns></returns>
@@ -102,7 +131,7 @@ namespace ServiceElectronicQueue.Controllers
         [HttpPost]
         public IActionResult UserLogin(UserLoginForView userLoginForView)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return View();
             if (_userManager.CheckLogin(userLoginForView) != null)
             {
@@ -116,19 +145,21 @@ namespace ServiceElectronicQueue.Controllers
                 {
                     User? user = _unitOfWork.UsersRep.GetByIndex((Guid)userId);
                     if (user != null)
-                    { 
+                    {
                         return RedirectToAction("UserAccount", "Account", new
                         {
                             UserId = user.IdUser, Email = user.Email, Password = user.Password, Role = user.Role,
-                            Surname = user.Surname, Name = user.Name, Patronymic = user.Patronymic, PhoneNumber = user.PhoneNumber
+                            Surname = user.Surname, Name = user.Name, Patronymic = user.Patronymic,
+                            PhoneNumber = user.PhoneNumber
                         });
                     }
                 }
             }
-            return View();
-        }
 
-        /// <summary>
+            return View();
+        }*/
+
+        /*/// <summary>
         /// Регистрация организации, GET
         /// </summary>
         /// <returns></returns>
@@ -148,29 +179,28 @@ namespace ServiceElectronicQueue.Controllers
         [HttpPost]
         public IActionResult OrganizationRegister(OrganizationRegisterForView organizationForView)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return View();
             if (_organizationManager.CheckRegister(organizationForView) != null)
             {
                 Organization organization = new Organization();
                 organization = _organizationManager.RegisterToDb(organizationForView);
-                _unitOfWork.OrganizationsRep.Create(organization); 
+                _unitOfWork.OrganizationsRep.Create(organization);
                 _unitOfWork.Save();
-                
+
                 _user.IdOrganization = organization.IdOrganization;
                 _unitOfWork.UsersRep.Create(_user);
                 _unitOfWork.Save();
                 return RedirectToAction("OrganizationAccount", "Account", new
                 {
-                    OrganizationId = organization.IdOrganization, EmailOrg = organization.Email, 
-                    PasswordOrg = organization.Password, Title = organization.Title, 
-                    UserId = _user.IdUser, EmailUser = _user.Email, Role = _user.IdRole, Surname = _user.Surname,
-                    Name = _user.Name, Patronymic = _user.Patronymic, PhoneNumber = _user.PhoneNumber
+                    OrganizationId = organization.IdOrganization,
+                    UserId = _user.IdUser,
+                    Role = _user.IdRole
                 });
             }
             return View();
         }
-        
+
         /// <summary>
         /// Вход организации, GET
         /// </summary>
@@ -190,29 +220,17 @@ namespace ServiceElectronicQueue.Controllers
         public IActionResult OrganizationLogin(OrganizationLoginForView organizationLoginForView)
         {
             return RedirectToAction();
-        }
+        }*/
+
 
         
-        
+
         [HttpGet]
         public IActionResult Privacy()
         {
             return View();
         }
 
-        /*[HttpPost]
-        public IActionResult ValidationRoles()
-        {
-            Role role1 = new Role("Пользователь организации");
-            Role role2 = new Role("Пользователь филиала");
-            _unitOfWork.RoleRep.Create(role1);
-            _unitOfWork.Save();
-            _unitOfWork.RoleRep.Create(role2);
-            _unitOfWork.Save();
-            _unitOfWork.Dispose();
-            return RedirectToAction("Index", "Home");
-        }*/
-        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

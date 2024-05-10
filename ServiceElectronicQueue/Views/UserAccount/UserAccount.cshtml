@@ -10,11 +10,11 @@
 {
     case "Пользователь организации":
         <div style="text-align: right">
-            <form asp-controller="Account" asp-action="UserAccountRegisterOrganization" method="post">
+            <form asp-controller="UserAccount" asp-action="UserAccountRegisterOrganization" method="post">
                 <button type="submit" class="btn btn-primary">Зарегистрировать организацию</button>
             </form><br />
     
-            <form asp-controller="Account" asp-action="UserAccountLoginOrganization" method="post">
+            <form asp-controller="UserAccount" asp-action="UserAccountLoginOrganization" method="post">
                 <button type="submit" class="btn btn-primary">Войти в кабинет организации</button>
             </form>
         </div> 
@@ -22,11 +22,11 @@
         
     case "Пользователь филиала":
         <div style="text-align: right">
-            <form asp-controller="Account" asp-action="UserAccountLoginBranchOffice" method="post">
+            <form asp-controller="UserAccount" asp-action="UserAccountLoginBranchOffice" method="post">
                 <button type="submit" class="btn btn-primary">Зарегистрировать организацию</button>
             </form><br />
     
-            <form asp-controller="Account" asp-action="UserAccountLoginBranchOffice" method="post">
+            <form asp-controller="UserAccount" asp-action="UserAccountLoginBranchOffice" method="post">
                 <button type="submit" class="btn btn-primary">Войти в кабинет организации</button>
             </form>
         </div>

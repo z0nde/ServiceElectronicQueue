@@ -23,7 +23,7 @@ namespace ServiceElectronicQueue.Controllers
 
         
         
-        /// <summary>
+        /*/// <summary>
         /// Аккаунт пользователя, GET
         /// Параметры для перенаправления и отображения данных о пользователе
         /// </summary>
@@ -52,7 +52,8 @@ namespace ServiceElectronicQueue.Controllers
                 surname, 
                 name, 
                 patronymic, 
-                phoneNumber);
+                phoneNumber
+            );
             
             var model = new UserAccountForView
             {
@@ -110,28 +111,42 @@ namespace ServiceElectronicQueue.Controllers
         public IActionResult UserAccountLoginBranchOffice()
         {
             return RedirectToAction();
-        }
+        }*/
         
         
         
         
-        [HttpGet]
-        public IActionResult OrganizationAccount(Guid orgId, string emailOrg, string passwordOrg, string title, Guid userId,
-            string emailUser, string passwordUser, Guid roleId, string surname, string name, string patronymic, string phoneNumber)
+        /*[HttpGet]
+        public IActionResult OrganizationAccount(Guid orgId, Guid userId, Guid roleId)
         {
-            _organization = new Organization(orgId, emailOrg, passwordOrg, title, null, null);
-            Random rnd = new();
-            string uniqueKey = Convert.ToString(rnd.Next(0, 99999999));
-            _organization.UniqueKey = uniqueKey;
-            _unitOfWork.OrganizationsRep.Update(_organization);
-            return View();
+            _user = _unitOfWork.UsersRep.GetByIndex(userId);
+            _organization = _unitOfWork.OrganizationsRep.GetByIndex(orgId);
+            /*_organization = new Organization(orgId, emailOrg, passwordOrg, title, null, null);
+            _unitOfWork.OrganizationsRep.Update(_organization);#1#
+            var model = new OrganizationAccountForView
+            {
+                Title = _organization.Title,
+                Surname = _user.Surname,
+                Name = _user.Name,
+                Patronymic = _user.Patronymic,
+                UniqueKey = _organization.UniqueKey
+            };
+            return View(model);
         }
 
         [HttpPost]
         public IActionResult OrganizationAccountGenerateUniqueKey()
         {
-            
-            return RedirectToAction();
+            Random rnd = new();
+            string uniqueKey = Convert.ToString(rnd.Next(0, 99999999));
+            _organization.UniqueKey = uniqueKey;
+            _unitOfWork.OrganizationsRep.Update(_organization);
+            return RedirectToAction("OrganizationAccount", "Account", new
+            {
+                OrganizationId = _organization.IdOrganization, 
+                UserId = _user.IdUser, 
+                Role = _user.IdRole
+            });
         }
 
         
@@ -141,6 +156,6 @@ namespace ServiceElectronicQueue.Controllers
             _userManager.Dispose();
             _unitOfWork.Dispose();
             base.Dispose(disposing);
-        }
+        }*/
     }
 }

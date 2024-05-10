@@ -94,7 +94,7 @@ C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\D
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.ServiceElectronicQueue.props
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.ServiceElectronicQueue.props
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\staticwebassets.pack.json
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\scopedcss\Views\Home\_Layout.cshtml.rz.scp.css
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\scopedcss\bundle\ServiceElectronicQueue.styles.css
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\scopedcss\projectbundle\ServiceElectronicQueue.bundle.scp.css
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ServiceE.787EEAD3.Up2Date

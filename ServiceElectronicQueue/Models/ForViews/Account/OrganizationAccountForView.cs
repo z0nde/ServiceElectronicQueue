@@ -15,4 +15,7 @@ public class OrganizationAccountForView
     
     [DisplayName("Отчество")]
     public string? Patronymic { get; set; }
+    
+    [DisplayName("Уникальный ключ организации")]
+    public string? UniqueKey { get; set; }
 }
