@@ -29,23 +29,8 @@ public class UserAuthController : Controller
     [HttpGet]
     public IActionResult UserRegister()
     {
-        /*var model = new UserRegisterForView()
-        {
-            RoleItems = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Value = "1",
-                    Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).First()
-                },
-                new SelectListItem
-                {
-                    Value = "2",
-                    Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).Skip(1).First()
-                }
-            }
-        };*/
-        return View( /*model*/);
+        
+        return View();
     }
 
     /// <summary>
@@ -58,18 +43,10 @@ public class UserAuthController : Controller
     {
         if (!ModelState.IsValid)
             return View();
-        /*userRegisterForView.Role = userRegisterForView.RoleItems
-            .Where(s => s.Value == userRegisterForView.SelectRoleItem.ToString())
-            .Select(s => s.Text)
-            .First();*/
         if (_userManager.CheckRegister(userRegisterForView) != null)
         {
             if (userRegisterForView.Role is "Пользователь организации" or "Пользователь филиала")
             {
-                /*_unitOfWork.UsersRep.Create(_userManager.RegisterToDb(userRegisterForView));
-                _unitOfWork.Save();*/
-
-                //var user = _userManager.RegisterToDb(userRegisterForView);
                 return RedirectToAction("UserAccount", "UserAccount", new
                 {
                     UserId = Guid.NewGuid(), Email = userRegisterForView.Email, Password = userRegisterForView.Password,
@@ -137,7 +114,7 @@ public class UserAuthController : Controller
     }
 
 
-    [HttpPost]
+    /*[HttpPost]
     public IActionResult ValidationRoles()
     {
         Role role1 = new Role("Пользователь организации");
@@ -148,5 +125,5 @@ public class UserAuthController : Controller
         _unitOfWork.Save();
         _unitOfWork.Dispose();
         return RedirectToAction("UserRegister", "UserAuth");
-    }
+    }*/
 }

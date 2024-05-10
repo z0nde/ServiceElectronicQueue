@@ -25,7 +25,7 @@ namespace ServiceElectronicQueue.Controllers
             _organizationManager = new OrganizationManager(_unitOfWork);
         }
 
-        /*/// <summary>
+        /// <summary>
         /// Регистрация пользователя, GET
         /// </summary>
         /// <returns></returns>
@@ -47,34 +47,8 @@ namespace ServiceElectronicQueue.Controllers
                         Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).Skip(1).First()
                     }
                 }
-            };#1#
-            return View( /*model#1#);
-        }
-
-        /// <summary>
-        /// Регистрация пользователя, GET
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public IActionResult UserRegister()
-        {
-            /*var model = new UserRegisterForView()
-            {
-                RoleItems = new List<SelectListItem>
-                {
-                    new SelectListItem
-                    {
-                        Value = "1",
-                        Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).First()
-                    },
-                    new SelectListItem
-                    {
-                        Value = "2",
-                        Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).Skip(1).First()
-                    }
-                }
-            };#1#
-            return View( /*model#1#);
+            };*/
+            return View( /*model*/);
         }
 
         /// <summary>
@@ -83,20 +57,20 @@ namespace ServiceElectronicQueue.Controllers
         /// <param name="userRegisterForView"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult UserRegister(UserRegisterForView userRegisterForView)
+        public IActionResult Index(UserRegisterForView userRegisterForView)
         {
             if (!ModelState.IsValid)
                 return View();
             /*userRegisterForView.Role = userRegisterForView.RoleItems
                 .Where(s => s.Value == userRegisterForView.SelectRoleItem.ToString())
                 .Select(s => s.Text)
-                .First();#1#
+                .First();*/
             if (_userManager.CheckRegister(userRegisterForView) != null)
             {
                 if (userRegisterForView.Role is "Пользователь организации" or "Пользователь филиала")
                 {
                     /*_unitOfWork.UsersRep.Create(_userManager.RegisterToDb(userRegisterForView));
-                    _unitOfWork.Save();#1#
+                    _unitOfWork.Save();*/
 
                     //var user = _userManager.RegisterToDb(userRegisterForView);
                     return RedirectToAction("UserAccount", "UserAccount", new
@@ -111,9 +85,11 @@ namespace ServiceElectronicQueue.Controllers
             }
 
             return View();
-        }*/
+        }
 
-        /*/// <summary>
+        
+
+        /// <summary>
         /// Вход пользователя, GET
         /// </summary>
         /// <returns></returns>
@@ -146,7 +122,7 @@ namespace ServiceElectronicQueue.Controllers
                     User? user = _unitOfWork.UsersRep.GetByIndex((Guid)userId);
                     if (user != null)
                     {
-                        return RedirectToAction("UserAccount", "Account", new
+                        return RedirectToAction("UserAccount", "UserAccount", new
                         {
                             UserId = user.IdUser, Email = user.Email, Password = user.Password, Role = user.Role,
                             Surname = user.Surname, Name = user.Name, Patronymic = user.Patronymic,
@@ -157,7 +133,7 @@ namespace ServiceElectronicQueue.Controllers
             }
 
             return View();
-        }*/
+        }
 
         /*/// <summary>
         /// Регистрация организации, GET
@@ -222,8 +198,6 @@ namespace ServiceElectronicQueue.Controllers
             return RedirectToAction();
         }*/
 
-
-        
 
         [HttpGet]
         public IActionResult Privacy()
