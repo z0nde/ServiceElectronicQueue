@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using ServiceElectronicQueue.DataCheck;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
@@ -8,14 +10,17 @@ namespace ServiceElectronicQueue.Controllers;
 
 public class UserAccountController : Controller
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    
     private readonly UnitOfWorkCompany _unitOfWork;
 
     private readonly UserManager _userManager;
     private User _user;
     private Organization _organization;
 
-    public UserAccountController(CompanyDbContext dbContext)
+    public UserAccountController(CompanyDbContext dbContext, IHttpContextAccessor httpContextAccessor)
     {
+        _httpContextAccessor = httpContextAccessor;
         _unitOfWork = new UnitOfWorkCompany(dbContext);
         _user = new User();
         _organization = new Organization();
@@ -35,11 +40,10 @@ public class UserAccountController : Controller
     /// <param name="phoneNumber"></param>
     /// <returns></returns>
     [HttpGet]
-    public IActionResult UserAccount(Guid userId, string email, string password, string role,
+    public IActionResult UserAccount(string email, string password, string role,
     string surname, string name, string patronymic, string phoneNumber)
     {
         _user = new User(
-            userId, 
             email, 
             password, 
             _unitOfWork.RoleRep
@@ -52,6 +56,10 @@ public class UserAccountController : Controller
             patronymic, 
             phoneNumber
         );
+
+        string userDataJson = JsonSerializer.Serialize(_user);
+        
+        _httpContextAccessor.HttpContext!.Session.SetString("UserData", userDataJson);
             
         var model = new UserAccountForView
         {
@@ -59,6 +67,7 @@ public class UserAccountController : Controller
             Patronymic = patronymic,
             Role = role
         };
+        
         return View(model);
     }
         
@@ -70,6 +79,9 @@ public class UserAccountController : Controller
     [HttpPost]
     public IActionResult UserAccountRegisterOrganization()
     {
+        var regUserDataJson = _httpContextAccessor.HttpContext!.Session.GetString("UserData");
+        _user = JsonSerializer.Deserialize<User>(regUserDataJson!)!;
+        
         return RedirectToAction("OrganizationRegister", "OrganizationAuth", new
         {
             UserId = _user.IdUser, Email = _user.Email, Password = _user.Password, Role = _user.Role,
@@ -113,7 +125,7 @@ public class UserAccountController : Controller
 
     protected override void Dispose(bool disposing)
     {
-        _userManager.Dispose();
+        //_userManager.Dispose();
         _unitOfWork.Dispose();
         base.Dispose(disposing);
     }

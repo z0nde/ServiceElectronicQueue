@@ -13,6 +13,14 @@ public class OrganizationAccountController : Controller
     private readonly UserManager _userManager;
     private User _user;
     private Organization _organization;
+
+    public OrganizationAccountController(CompanyDbContext db)
+    {
+        _unitOfWork = new UnitOfWorkCompany(db);
+        _userManager = new UserManager(_unitOfWork);
+        _user = new User();
+        _organization = new Organization();
+    }
     
     [HttpGet]
     public IActionResult OrganizationAccount(Guid orgId, Guid userId, Guid roleId)

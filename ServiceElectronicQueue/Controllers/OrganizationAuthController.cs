@@ -15,9 +15,12 @@ public class OrganizationAuthController : Controller
     private readonly OrganizationManager _organizationManager;
     private User _user;
 
-    public OrganizationAuthController(CompanyDbContext dbContext)
+    public OrganizationAuthController(CompanyDbContext db)
     {
-        
+        _unitOfWork = new UnitOfWorkCompany(db);
+        _userManager = new UserManager(_unitOfWork);
+        _organizationManager = new OrganizationManager(_unitOfWork);
+        _user = new User();
     }
     
     /// <summary>
@@ -86,7 +89,7 @@ public class OrganizationAuthController : Controller
 
     protected override void Dispose(bool disposing)
     {
-        _userManager.Dispose();
+        //_userManager.Dispose();
         _organizationManager.Dispose();
         _unitOfWork.Dispose();
         base.Dispose(disposing);

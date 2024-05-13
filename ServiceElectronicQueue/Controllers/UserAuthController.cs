@@ -29,7 +29,6 @@ public class UserAuthController : Controller
     [HttpGet]
     public IActionResult UserRegister()
     {
-        
         return View();
     }
 
@@ -49,7 +48,7 @@ public class UserAuthController : Controller
             {
                 return RedirectToAction("UserAccount", "UserAccount", new
                 {
-                    UserId = Guid.NewGuid(), Email = userRegisterForView.Email, Password = userRegisterForView.Password,
+                    Email = userRegisterForView.Email, Password = userRegisterForView.Password,
                     Role = userRegisterForView.Role, Surname = userRegisterForView.Surname,
                     Name = userRegisterForView.Name,
                     Patronymic = userRegisterForView.Patronymic, PhoneNumber = userRegisterForView.PhoneNumber

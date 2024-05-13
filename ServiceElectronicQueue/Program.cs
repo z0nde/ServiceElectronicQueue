@@ -8,10 +8,18 @@ string connectionString = builder.Configuration.GetConnectionString("ConnectionC
 builder.Services.AddDbContext<CompanyDbContext>(optionsAction => 
     optionsAction.UseNpgsql(connectionString));
 
+// Добавление сессий в сервисы
+builder.Services.AddSession();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Добавление средства доступа к контексту Http
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+
+// Использование сессий
+app.UseSession();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -28,6 +36,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(name: "default", pattern: "{controller=UserAuth}/{action=UserRegister}/{id?}");
 
 app.Run();

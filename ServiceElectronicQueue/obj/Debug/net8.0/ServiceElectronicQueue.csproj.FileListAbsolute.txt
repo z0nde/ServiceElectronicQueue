@@ -103,3 +103,4 @@ C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\D
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ServiceElectronicQueue.genruntimeconfig.cache
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ref\ServiceElectronicQueue.dll
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\System.Security.Permissions.dll
