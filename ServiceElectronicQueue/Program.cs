@@ -13,6 +13,7 @@ builder.Services.AddSession();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 // Добавление средства доступа к контексту Http
 builder.Services.AddHttpContextAccessor();
 

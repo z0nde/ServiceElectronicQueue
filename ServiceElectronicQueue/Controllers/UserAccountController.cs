@@ -58,7 +58,6 @@ public class UserAccountController : Controller
         );
 
         string userDataJson = JsonSerializer.Serialize(_user);
-        
         _httpContextAccessor.HttpContext!.Session.SetString("UserData", userDataJson);
             
         var model = new UserAccountForView

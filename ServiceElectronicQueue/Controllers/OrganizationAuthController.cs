@@ -9,14 +9,17 @@ namespace ServiceElectronicQueue.Controllers;
 
 public class OrganizationAuthController : Controller
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    
     private readonly UnitOfWorkCompany _unitOfWork;
 
     private readonly UserManager _userManager;
     private readonly OrganizationManager _organizationManager;
     private User _user;
 
-    public OrganizationAuthController(CompanyDbContext db)
+    public OrganizationAuthController(CompanyDbContext db, IHttpContextAccessor httpContextAccessor)
     {
+        _httpContextAccessor = httpContextAccessor;
         _unitOfWork = new UnitOfWorkCompany(db);
         _userManager = new UserManager(_unitOfWork);
         _organizationManager = new OrganizationManager(_unitOfWork);
@@ -90,7 +93,7 @@ public class OrganizationAuthController : Controller
     protected override void Dispose(bool disposing)
     {
         //_userManager.Dispose();
-        _organizationManager.Dispose();
+        //_organizationManager.Dispose();
         _unitOfWork.Dispose();
         base.Dispose(disposing);
     }

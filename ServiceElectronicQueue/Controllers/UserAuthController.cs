@@ -107,7 +107,7 @@ public class UserAuthController : Controller
 
     protected override void Dispose(bool disposing)
     {
-        _userManager.Dispose();
+        //_userManager.Dispose();
         _unitOfWork.Dispose();
         base.Dispose(disposing);
     }

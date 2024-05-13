@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\bin",
-    "\\bin\\Debug",
     "\\Controllers",
-    "\\DataCheck",
+    "\\Migrations",
     "\\Models",
     "\\Models\\ForViews",
     "\\Models\\ForViews\\Account",
     "\\Models\\ForViews\\Login",
-    "\\Models\\ForViews\\Register"
+    "\\Models\\ForViews\\Register",
+    "\\Views",
+    "\\Views\\Shared"
   ],
-  "SelectedNode": "\\bin\\Debug\\net8.0",
+  "SelectedNode": "\\Program.cs",
   "PreviewInSolutionExplorer": false
 }
