@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using ServiceElectronicQueue.DataCheck;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
@@ -16,6 +17,7 @@ public class OrganizationAuthController : Controller
     private readonly UserManager _userManager;
     private readonly OrganizationManager _organizationManager;
     private User _user;
+    private Organization _organization;
 
     public OrganizationAuthController(CompanyDbContext db, IHttpContextAccessor httpContextAccessor)
     {
@@ -24,6 +26,7 @@ public class OrganizationAuthController : Controller
         _userManager = new UserManager(_unitOfWork);
         _organizationManager = new OrganizationManager(_unitOfWork);
         _user = new User();
+        _organization = new Organization();
     }
     
     /// <summary>
@@ -50,17 +53,20 @@ public class OrganizationAuthController : Controller
             return View();
         if (_organizationManager.CheckRegister(organizationForView) != null)
         {
-            Organization organization = new Organization();
-            organization = _organizationManager.RegisterToDb(organizationForView);
-            _unitOfWork.OrganizationsRep.Create(organization);
+            _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!)!;
+            _httpContextAccessor.HttpContext.Session.Clear();
+            
+            _organization = _organizationManager.RegisterToDb(organizationForView);
+            _unitOfWork.OrganizationsRep.Create(_organization);
             _unitOfWork.Save();
 
-            _user.IdOrganization = organization.IdOrganization;
+            _user.IdOrganization = _organization.IdOrganization;
+            _user.Organization = _organization;
             _unitOfWork.UsersRep.Create(_user);
             _unitOfWork.Save();
             return RedirectToAction("OrganizationAccount", "OrganizationAccount", new
             {
-                OrganizationId = organization.IdOrganization,
+                OrganizationId = _organization.IdOrganization,
                 UserId = _user.IdUser,
                 Role = _user.IdRole
             });
@@ -92,8 +98,6 @@ public class OrganizationAuthController : Controller
 
     protected override void Dispose(bool disposing)
     {
-        //_userManager.Dispose();
-        //_organizationManager.Dispose();
         _unitOfWork.Dispose();
         base.Dispose(disposing);
     }

@@ -44,6 +44,7 @@ public class UserAccountController : Controller
     string surname, string name, string patronymic, string phoneNumber)
     {
         _user = new User(
+            Guid.NewGuid(),
             email, 
             password, 
             _unitOfWork.RoleRep
@@ -51,14 +52,16 @@ public class UserAccountController : Controller
                 .Where(s => s.Amplua == role)
                 .Select(s => s.IdRole)
                 .First(), 
+            _unitOfWork.RoleRep
+                .GetAll()
+                .Where(s => s.Amplua == role)
+                .Select(s => s)
+                .First(),
             surname, 
             name, 
             patronymic, 
             phoneNumber
         );
-
-        string userDataJson = JsonSerializer.Serialize(_user);
-        _httpContextAccessor.HttpContext!.Session.SetString("UserData", userDataJson);
             
         var model = new UserAccountForView
         {
@@ -66,6 +69,8 @@ public class UserAccountController : Controller
             Patronymic = patronymic,
             Role = role
         };
+        
+        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user));
         
         return View(model);
     }
@@ -78,8 +83,7 @@ public class UserAccountController : Controller
     [HttpPost]
     public IActionResult UserAccountRegisterOrganization()
     {
-        var regUserDataJson = _httpContextAccessor.HttpContext!.Session.GetString("UserData");
-        _user = JsonSerializer.Deserialize<User>(regUserDataJson!)!;
+        _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!)!;
         
         return RedirectToAction("OrganizationRegister", "OrganizationAuth", new
         {
@@ -124,7 +128,6 @@ public class UserAccountController : Controller
 
     protected override void Dispose(bool disposing)
     {
-        //_userManager.Dispose();
         _unitOfWork.Dispose();
         base.Dispose(disposing);
     }

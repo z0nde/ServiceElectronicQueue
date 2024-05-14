@@ -10,8 +10,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string UniqueLink { get; set; }
 
         public Guid IdOrganization { get; set; }
-        public Organization Organization { get; set; }
+        public virtual Organization Organization { get; set; }
         
-        public ICollection<Services> Services { get; set; }
+        public virtual ICollection<Services> Services { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using ServiceElectronicQueue.DataCheck;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
@@ -30,8 +31,7 @@ public class OrganizationAccountController : Controller
     {
         _user = _unitOfWork.UsersRep.GetByIndex(userId);
         _organization = _unitOfWork.OrganizationsRep.GetByIndex(orgId);
-        /*_organization = new Organization(orgId, emailOrg, passwordOrg, title, null, null);
-        _unitOfWork.OrganizationsRep.Update(_organization);*/
+        _unitOfWork.OrganizationsRep.Update(_organization);
         var model = new OrganizationAccountForView
         {
             Title = _organization.Title,
@@ -40,15 +40,22 @@ public class OrganizationAccountController : Controller
             Patronymic = _user.Patronymic,
             UniqueKey = _organization.UniqueKey
         };
+        
+        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user));
+        _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(_organization));
+        
         return View(model);
     }
 
     [HttpPost]
     public IActionResult OrganizationAccountGenerateUniqueKey()
     {
+        _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext.Session.GetString("UserData"));
+        _organization = JsonSerializer.Deserialize<Organization>(_httpContextAccessor.HttpContext.Session.GetString("OrganizationData"));
+        
         Random rnd = new();
         string uniqueKey = Convert.ToString(rnd.Next(0, 99999999));
-        _organization.UniqueKey = uniqueKey;
+        _organization!.UniqueKey = uniqueKey;
         _unitOfWork.OrganizationsRep.Update(_organization);
         return RedirectToAction("OrganizationAccount", "OrganizationAccount", new
         {

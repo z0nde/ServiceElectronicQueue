@@ -11,7 +11,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public DateTime EndService { get; set; }
 
         public Guid IdServices { get; set; }
-        public Services Services { get; set; }
+        public virtual Services Services { get; set; }
 
         public ElectronicQueue()
         { }

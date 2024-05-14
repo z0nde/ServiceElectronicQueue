@@ -4,12 +4,12 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
     public class CompanyDbContext : DbContext
     {
-        public DbSet<Organization> Organizations { get; set; }
-        public DbSet<BranchOffice> BranchOffices { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Services> Services { get; set; }
-        public DbSet<ElectronicQueue> ElectronicQueues { get; set; }
+        public virtual DbSet<Organization> Organizations { get; set; }
+        public virtual DbSet<BranchOffice> BranchOffices { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Services> Services { get; set; }
+        public virtual DbSet<ElectronicQueue> ElectronicQueues { get; set; }
 
         /*public CompanyDbContext()
         { }*/

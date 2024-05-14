@@ -8,9 +8,9 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string Service { get; set; }
 
         public Guid IdBranchOffice { get; set; }
-        public BranchOffice BranchOffices { get; set; }
+        public virtual BranchOffice BranchOffices { get; set; }
 
-        public ICollection<ElectronicQueue> ElectronicQueues { get; set; }
+        public virtual ICollection<ElectronicQueue> ElectronicQueues { get; set; }
 
         public Services()
         { }

@@ -3,7 +3,7 @@ using ServiceElectronicQueue.Models.ForViews.Register;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
-    public sealed class User
+    public class User
     {
         [Key] 
         public Guid IdUser { get; set; }
@@ -15,10 +15,11 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string PhoneNumber { get; set; }
         
         public Guid IdOrganization { get; set; }
-        public Organization Organization { get; set; }
-        
         public Guid IdRole { get; set; }
-        public Role Role { get; set; }
+        
+        
+        public virtual Organization Organization { get; set; }
+        public virtual Role Role { get; set; }
         
         public User()
         { }
@@ -37,7 +38,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
             (IdUser, Email, Password, IdRole, Surname, Name, Patronymic, PhoneNumber) =
             (idUser, email, password, roleId, surname, name, patronymic, phoneNumber);
 
-        
+        public User(Guid idUser, string email, string password, Guid roleId, Role role, string surname, string name, 
+            string patronymic, string phoneNumber) =>
+            (IdUser, Email, Password, IdRole, Role, Surname, Name, Patronymic, PhoneNumber) =
+            (idUser, email, password, roleId, role, surname, name, patronymic, phoneNumber);
 
         /*public User ToDb(UserRegisterForView view)
         {
