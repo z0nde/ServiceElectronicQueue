@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
@@ -10,6 +11,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string UniqueLink { get; set; }
 
         public Guid IdOrganization { get; set; }
+        
+        [ForeignKey("IdOrganization")]
         public virtual Organization Organization { get; set; }
         
         public virtual ICollection<Services> Services { get; set; }

@@ -4,7 +4,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
     public class Role
     {
-        [Key] public Guid IdRole { get; set; }
+        [Key] 
+        public Guid IdRole { get; set; }
         public string Amplua { get; set; }
 
         public virtual ICollection<User> Users { get; set; }

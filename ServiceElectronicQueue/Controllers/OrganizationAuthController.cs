@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceElectronicQueue.DataCheck;
 using ServiceElectronicQueue.Models.DataBaseCompany;
@@ -37,7 +38,8 @@ public class OrganizationAuthController : Controller
     public IActionResult OrganizationRegister(Guid userId, string email, string password, Guid role,
         string surname, string name, string patronymic, string phoneNumber)
     {
-        _user = new User(userId, email, password, role, surname, name, patronymic, phoneNumber);
+        /*User user = new User(userId, email, password, role, surname, name, patronymic, phoneNumber);
+        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(user));*/
         return View();
     }
 
@@ -53,22 +55,30 @@ public class OrganizationAuthController : Controller
             return View();
         if (_organizationManager.CheckRegister(organizationForView) != null)
         {
-            _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!)!;
+            User user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!)!;
             _httpContextAccessor.HttpContext.Session.Clear();
             
-            _organization = _organizationManager.RegisterToDb(organizationForView);
-            _unitOfWork.OrganizationsRep.Create(_organization);
+            Organization organization = _organizationManager.RegisterToDb(organizationForView);
+            _unitOfWork.OrganizationsRep.Create(organization);
             _unitOfWork.Save();
 
-            _user.IdOrganization = _organization.IdOrganization;
-            _user.Organization = _organization;
-            _unitOfWork.UsersRep.Create(_user);
+            user.IdOrganization = organization.IdOrganization;
+            _unitOfWork.UsersRep.Create(user);
             _unitOfWork.Save();
+            
+            //разобраться, почему теряются данные при переходе на следующую страницу!!!
+            //потом удалить
+            JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                WriteIndented = true
+            };
+            _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(user, options));
+            _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(organization, options));
+            
             return RedirectToAction("OrganizationAccount", "OrganizationAccount", new
             {
-                OrganizationId = _organization.IdOrganization,
-                UserId = _user.IdUser,
-                Role = _user.IdRole
+                organization.IdOrganization, user.IdUser, user.IdRole
             });
         }
 

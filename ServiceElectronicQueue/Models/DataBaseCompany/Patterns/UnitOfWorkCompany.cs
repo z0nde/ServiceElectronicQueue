@@ -12,16 +12,6 @@
         private ServicesRepository _servicesRepository;
         private ElectronicQueueRepository _electronicQueueRepository;
 
-        public UserRepository UsersRep
-        {
-            get
-            {
-                if (_userRepository == null)
-                    _userRepository = new UserRepository(_db);
-                return _userRepository; 
-            }
-        }
-
         public OrganizationRepository OrganizationsRep
         {
             get
@@ -29,6 +19,16 @@
                 if (_organizationRepository == null)
                     _organizationRepository = new OrganizationRepository(_db);
                 return _organizationRepository;
+            }
+        }
+        
+        public UserRepository UsersRep
+        {
+            get
+            {
+                if (_userRepository == null)
+                    _userRepository = new UserRepository(_db);
+                return _userRepository; 
             }
         }
 

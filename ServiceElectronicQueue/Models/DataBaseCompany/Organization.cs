@@ -19,8 +19,11 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public virtual ICollection<BranchOffice> Branches { get; set; }
         
 
-        public Organization() =>
-            IdOrganization = Guid.NewGuid();
+        public Organization()
+        { }
+
+        public Organization(Guid idOrganization, string email, string password, string title) =>
+            (IdOrganization, Email, Password, Title) = (idOrganization, email, password, title);
 
         public Organization(string email, string password, string title, string? uniqueKey, byte[]? logo) =>
             (IdOrganization, Email, Password, Title, UniqueKey, Logo) = (Guid.NewGuid(), email, password, title, uniqueKey, logo);

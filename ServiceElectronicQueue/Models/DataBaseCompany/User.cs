@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using ServiceElectronicQueue.Models.ForViews.Register;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
@@ -14,11 +15,15 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string Patronymic { get; set; }
         public string PhoneNumber { get; set; }
         
+        
         public Guid IdOrganization { get; set; }
         public Guid IdRole { get; set; }
         
         
+        [ForeignKey("IdOrganization")]
         public virtual Organization Organization { get; set; }
+        
+        [ForeignKey("IdRole")]
         public virtual Role Role { get; set; }
         
         public User()

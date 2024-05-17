@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
@@ -11,6 +12,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public DateTime EndService { get; set; }
 
         public Guid IdServices { get; set; }
+        
+        [ForeignKey("IdServices")]
         public virtual Services Services { get; set; }
 
         public ElectronicQueue()

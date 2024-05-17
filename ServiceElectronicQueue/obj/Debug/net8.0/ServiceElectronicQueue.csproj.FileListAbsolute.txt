@@ -26,6 +26,7 @@ C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\D
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\System.Composition.Hosting.dll
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\System.Composition.Runtime.dll
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\System.Composition.TypedParts.dll
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\System.Security.Permissions.dll
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll
@@ -94,6 +95,7 @@ C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\D
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.ServiceElectronicQueue.props
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.ServiceElectronicQueue.props
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\scopedcss\bundle\ServiceElectronicQueue.styles.css
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\scopedcss\projectbundle\ServiceElectronicQueue.bundle.scp.css
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ServiceE.787EEAD3.Up2Date
@@ -102,5 +104,3 @@ C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\D
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ServiceElectronicQueue.pdb
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ServiceElectronicQueue.genruntimeconfig.cache
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ref\ServiceElectronicQueue.dll
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
-C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\System.Security.Permissions.dll

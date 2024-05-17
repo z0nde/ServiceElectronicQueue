@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
@@ -8,6 +9,8 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public string Service { get; set; }
 
         public Guid IdBranchOffice { get; set; }
+        
+        [ForeignKey("IdBranchOffice")]
         public virtual BranchOffice BranchOffices { get; set; }
 
         public virtual ICollection<ElectronicQueue> ElectronicQueues { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceElectronicQueue.DataCheck;
 using ServiceElectronicQueue.Models.DataBaseCompany;
@@ -29,9 +30,22 @@ public class OrganizationAccountController : Controller
     [HttpGet]
     public IActionResult OrganizationAccount(Guid orgId, Guid userId, Guid roleId)
     {
-        _user = _unitOfWork.UsersRep.GetByIndex(userId);
-        _organization = _unitOfWork.OrganizationsRep.GetByIndex(orgId);
+        JsonSerializerOptions options = new()
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            WriteIndented = true
+        };
+        _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!, options)!;
+        _organization = JsonSerializer.Deserialize<Organization>(_httpContextAccessor.HttpContext!.Session.GetString("OrganizationData")!, options)!;
+        _httpContextAccessor.HttpContext.Session.Clear();
+        
+        //разобраться, почему теряются данные при переходе на следующую страницу!!!
+        //потом удалить
+        /*_user = _unitOfWork.UsersRep.GetByIndex(userId);
+        _organization = _unitOfWork.OrganizationsRep.GetByIndex(orgId);*/
+        
         _unitOfWork.OrganizationsRep.Update(_organization);
+        _unitOfWork.Save();
         var model = new OrganizationAccountForView
         {
             Title = _organization.Title,
@@ -41,8 +55,8 @@ public class OrganizationAccountController : Controller
             UniqueKey = _organization.UniqueKey
         };
         
-        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user));
-        _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(_organization));
+        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user, options));
+        _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(_organization, options));
         
         return View(model);
     }
@@ -50,13 +64,25 @@ public class OrganizationAccountController : Controller
     [HttpPost]
     public IActionResult OrganizationAccountGenerateUniqueKey()
     {
-        _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext.Session.GetString("UserData"));
-        _organization = JsonSerializer.Deserialize<Organization>(_httpContextAccessor.HttpContext.Session.GetString("OrganizationData"));
+        JsonSerializerOptions options = new()
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            WriteIndented = true
+        };
+        _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!, options)!;
+        _organization = JsonSerializer.Deserialize<Organization>(_httpContextAccessor.HttpContext.Session.GetString("OrganizationData")!, options)!;
+        _httpContextAccessor.HttpContext.Session.Clear();
         
         Random rnd = new();
         string uniqueKey = Convert.ToString(rnd.Next(0, 99999999));
-        _organization!.UniqueKey = uniqueKey;
+        _organization.UniqueKey = uniqueKey;
         _unitOfWork.OrganizationsRep.Update(_organization);
+        
+        //разобраться, почему теряются данные при переходе на следующую страницу!!!
+        //потом удалить
+        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user, options));
+        _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(_organization, options));
+        
         return RedirectToAction("OrganizationAccount", "OrganizationAccount", new
         {
             OrganizationId = _organization.IdOrganization, 

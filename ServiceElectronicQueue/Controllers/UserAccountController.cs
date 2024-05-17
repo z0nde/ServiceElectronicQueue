@@ -51,11 +51,6 @@ public class UserAccountController : Controller
                 .GetAll()
                 .Where(s => s.Amplua == role)
                 .Select(s => s.IdRole)
-                .First(), 
-            _unitOfWork.RoleRep
-                .GetAll()
-                .Where(s => s.Amplua == role)
-                .Select(s => s)
                 .First(),
             surname, 
             name, 
@@ -84,7 +79,7 @@ public class UserAccountController : Controller
     public IActionResult UserAccountRegisterOrganization()
     {
         _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!)!;
-        
+        //_httpContextAccessor.HttpContext.Session.Clear();
         return RedirectToAction("OrganizationRegister", "OrganizationAuth", new
         {
             UserId = _user.IdUser, Email = _user.Email, Password = _user.Password, Role = _user.Role,
