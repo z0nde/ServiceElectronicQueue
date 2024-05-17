@@ -25,11 +25,11 @@ namespace ServiceElectronicQueue.Controllers
             _organizationManager = new OrganizationManager(_unitOfWork);
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Регистрация пользователя, GET
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        /*[HttpGet]
         public IActionResult Index()
         {
             /*var model = new UserRegisterForView()
@@ -47,8 +47,8 @@ namespace ServiceElectronicQueue.Controllers
                         Text = _unitOfWork.RoleRep.GetAll().Select(s => s.Amplua).Skip(1).First()
                     }
                 }
-            };*/
-            return View( /*model*/);
+            };#2#
+            return View( /*model#2#);
         }
 
         /// <summary>
@@ -64,13 +64,13 @@ namespace ServiceElectronicQueue.Controllers
             /*userRegisterForView.Role = userRegisterForView.RoleItems
                 .Where(s => s.Value == userRegisterForView.SelectRoleItem.ToString())
                 .Select(s => s.Text)
-                .First();*/
-            if (_userManager.CheckRegister(userRegisterForView) != null)
+                .First();#2#
+            if (_userManager.CheckRegisterModel(userRegisterForView) != null)
             {
                 if (userRegisterForView.Role is "Пользователь организации" or "Пользователь филиала")
                 {
                     /*_unitOfWork.UsersRep.Create(_userManager.RegisterToDb(userRegisterForView));
-                    _unitOfWork.Save();*/
+                    _unitOfWork.Save();#2#
 
                     //var user = _userManager.RegisterToDb(userRegisterForView);
                     return RedirectToAction("UserAccount", "UserAccount", new
@@ -109,7 +109,7 @@ namespace ServiceElectronicQueue.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            if (_userManager.CheckLogin(userLoginForView) != null)
+            if (_userManager.CheckLoginModel(userLoginForView) != null)
             {
                 Guid? userId = _unitOfWork.UsersRep
                     .GetAll()
@@ -133,9 +133,9 @@ namespace ServiceElectronicQueue.Controllers
             }
 
             return View();
-        }
+        }#1#
 
-        /*/// <summary>
+        /#1#// <summary>
         /// Регистрация организации, GET
         /// </summary>
         /// <returns></returns>
@@ -196,7 +196,7 @@ namespace ServiceElectronicQueue.Controllers
         public IActionResult OrganizationLogin(OrganizationLoginForView organizationLoginForView)
         {
             return RedirectToAction();
-        }*/
+        }#1#*/
 
 
         [HttpGet]
@@ -213,8 +213,8 @@ namespace ServiceElectronicQueue.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            _userManager.Dispose();
-            _organizationManager.Dispose();
+            /*_userManager.Dispose();
+            _organizationManager.Dispose();*/
             _unitOfWork.Dispose();
             base.Dispose(disposing);
         }

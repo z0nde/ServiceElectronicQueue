@@ -14,7 +14,7 @@ namespace ServiceElectronicQueue.DataCheck
             _unitOfWork = unitOfWork;
         }
         
-        public UserRegisterForView? CheckRegister(UserRegisterForView? obj)
+        public UserRegisterForView? CheckRegisterModel(UserRegisterForView? obj)
         {
             return obj is
             {
@@ -23,7 +23,7 @@ namespace ServiceElectronicQueue.DataCheck
             } ? obj : null;
         }
 
-        public UserLoginForView? CheckLogin(UserLoginForView? obj)
+        public UserLoginForView? CheckLoginModel(UserLoginForView? obj)
         {
             return obj is
             {

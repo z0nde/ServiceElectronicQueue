@@ -77,7 +77,7 @@ public class OrganizationAccountController : Controller
         Random rnd = new();
         string uniqueKey = Convert.ToString(rnd.Next(0, 99999999));
         bool verificationFlagUniqueKey = true;
-        while (verificationFlagUniqueKey == true)
+        while (verificationFlagUniqueKey)
         {
             if (_unitOfWork.OrganizationsRep
                     .GetAll()

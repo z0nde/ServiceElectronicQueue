@@ -1,4 +1,5 @@
-﻿@model ServiceElectronicQueue.Models.ForViews.Register.UserRegisterForView
+﻿@*
+@model ServiceElectronicQueue.Models.ForViews.Register.UserRegisterForView
 
 @{
     ViewData["Title"] = "Home Page";
@@ -25,11 +26,11 @@
     </div><br />
     
     
-    @*<form asp-controller="Home" asp-action="Index" method="get">
+    $1$<form asp-controller="Home" asp-action="Index" method="get">
         <select asp-for="SelectRoleItem" asp-items="@Model.RoleItems">
             <option value=""> Выберете элемент: </option>
         </select>
-    </form>*@
+    </form>#1#
     
     <div class="form-group">
         <label asp-for="Role"></label>
@@ -64,13 +65,14 @@
     <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
 </form>
 
-@*кнопка для добавления ролей по умолчанию*@
-@*<form asp-controller="UserAuth" asp-action="ValidationRoles" method="post">
+$1$кнопка для добавления ролей по умолчанию#1#
+$1$<form asp-controller="UserAuth" asp-action="ValidationRoles" method="post">
     <button type="submit" class="btn btn-primary">добавить роли</button>
-</form>*@
+</form>#1#
 
-@*отображение роли*@
-@*@model ServiceElectronicQueue.Models.DataBaseCompany.Role
+$1$отображение роли#1#
+@#1#model ServiceElectronicQueue.Models.DataBaseCompany.Role
 <form asp-controller="Home" asp-action="Index" method="get">
     <h2>Роль 1: @Model.Amplua, @Model.IdRole</h2>
-</form>*@
+</form>#1#
+*@
