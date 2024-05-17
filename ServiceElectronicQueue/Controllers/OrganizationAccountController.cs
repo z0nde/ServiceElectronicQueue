@@ -30,6 +30,8 @@ public class OrganizationAccountController : Controller
     [HttpGet]
     public IActionResult OrganizationAccount(Guid orgId, Guid userId, Guid roleId)
     {
+        //разобраться, почему теряются данные при переходе на эту страницу!!!
+        //потом удалить
         JsonSerializerOptions options = new()
         {
             ReferenceHandler = ReferenceHandler.Preserve,
@@ -39,8 +41,7 @@ public class OrganizationAccountController : Controller
         _organization = JsonSerializer.Deserialize<Organization>(_httpContextAccessor.HttpContext!.Session.GetString("OrganizationData")!, options)!;
         _httpContextAccessor.HttpContext.Session.Clear();
         
-        //разобраться, почему теряются данные при переходе на следующую страницу!!!
-        //потом удалить
+        //потом раскомментить
         /*_user = _unitOfWork.UsersRep.GetByIndex(userId);
         _organization = _unitOfWork.OrganizationsRep.GetByIndex(orgId);*/
         
@@ -75,10 +76,20 @@ public class OrganizationAccountController : Controller
         
         Random rnd = new();
         string uniqueKey = Convert.ToString(rnd.Next(0, 99999999));
-        _organization.UniqueKey = uniqueKey;
-        _unitOfWork.OrganizationsRep.Update(_organization);
+        bool verificationFlagUniqueKey = true;
+        while (verificationFlagUniqueKey == true)
+        {
+            if (_unitOfWork.OrganizationsRep
+                    .GetAll()
+                    .Where(s => s.UniqueKey == uniqueKey)
+                    .Select(s => s.UniqueKey)
+                    .FirstOrDefault() != null) continue;
+            _organization.UniqueKey = uniqueKey;
+            _unitOfWork.OrganizationsRep.Update(_organization);
+            verificationFlagUniqueKey = false;
+        }
         
-        //разобраться, почему теряются данные при переходе на следующую страницу!!!
+        //разобраться, почему теряются данные при переходе на эту страницу!!!
         //потом удалить
         _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user, options));
         _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(_organization, options));
