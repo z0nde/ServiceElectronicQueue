@@ -3,7 +3,7 @@ using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Login;
 using ServiceElectronicQueue.Models.ForViews.Register;
 
-namespace ServiceElectronicQueue.DataCheck;
+namespace ServiceElectronicQueue.ManagersData;
 
 public class OrganizationManager : IDisposable
 {

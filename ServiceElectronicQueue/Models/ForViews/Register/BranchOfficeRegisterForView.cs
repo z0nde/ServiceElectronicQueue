@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ServiceElectronicQueue.Models.ForViews.Register;
 
-public class OrganizationRegisterForView
+public class BranchOfficeRegisterForView
 {
-    [DisplayName("Почта")]
+    [DisplayName("Почта")] 
     public string? Email { get; set; }
-    
-    [DisplayName("Пароль")] 
+
+    [DisplayName("Пароль")]
     [DataType(DataType.Password)]
     public string? Password { get; set; }
     
@@ -17,11 +17,9 @@ public class OrganizationRegisterForView
     [Compare("Password", ErrorMessage = "Пароли не совпадают")]
     public string? ConfirmPassword { get; set; }
     
-
-    [DisplayName("Название организации")]
-    public string? Title { get; set; }
+    [DisplayName("Адрес филиала")]
+    public string? Addres { get; set; }
     
-    [DisplayName("Логотип")]
-    [DataType(DataType.ImageUrl)]
-    public string? Logo { get; set; }
+    [DisplayName("Уникальный ключ организации")]
+    public string? UniqueKeyOrganization { get; set; }
 }

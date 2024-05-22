@@ -3,16 +3,14 @@ using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Login;
 using ServiceElectronicQueue.Models.ForViews.Register;
 
-namespace ServiceElectronicQueue.DataCheck
+namespace ServiceElectronicQueue.ManagersData
 {
     public class UserManager : IDisposable
     {
         private readonly UnitOfWorkCompany _unitOfWork;
-        
-        public UserManager(UnitOfWorkCompany unitOfWork)
-        {
+
+        public UserManager(UnitOfWorkCompany unitOfWork) =>
             _unitOfWork = unitOfWork;
-        }
         
         public UserRegisterForView? CheckRegisterModel(UserRegisterForView? obj)
         {

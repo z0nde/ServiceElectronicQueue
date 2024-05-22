@@ -7,8 +7,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
     {
         [Key] 
         public Guid IdBranchOffice { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
         public string Addres { get; set; }
-        public string UniqueLink { get; set; }
+        public string? UniqueLink { get; set; }
 
         public Guid IdOrganization { get; set; }
         

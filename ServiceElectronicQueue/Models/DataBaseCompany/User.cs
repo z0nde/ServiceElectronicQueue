@@ -43,10 +43,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
             (IdUser, Email, Password, IdRole, Surname, Name, Patronymic, PhoneNumber) =
             (idUser, email, password, roleId, surname, name, patronymic, phoneNumber);
 
-        public User(Guid idUser, string email, string password, Guid roleId, Role role, string surname, string name, 
+        /*public User(Guid idUser, string email, string password, Guid roleId, Role role, string surname, string name, 
             string patronymic, string phoneNumber) =>
             (IdUser, Email, Password, IdRole, Role, Surname, Name, Patronymic, PhoneNumber) =
-            (idUser, email, password, roleId, role, surname, name, patronymic, phoneNumber);
+            (idUser, email, password, roleId, role, surname, name, patronymic, phoneNumber);*/
 
         /*public User ToDb(UserRegisterForView view)
         {

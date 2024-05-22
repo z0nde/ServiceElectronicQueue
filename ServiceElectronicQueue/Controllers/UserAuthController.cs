@@ -1,12 +1,15 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceElectronicQueue.DataCheck;
+using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+using ServiceElectronicQueue.ManagersData;
 using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Login;
 using ServiceElectronicQueue.Models.ForViews.Register;
+using ServiceElectronicQueue.Models.JsonModels.TransmittingHttp;
+using ServiceElectronicQueue.Models.JsonModels.TransmittingUrl;
 
 namespace ServiceElectronicQueue.Controllers
 {
@@ -16,7 +19,6 @@ namespace ServiceElectronicQueue.Controllers
         private readonly UnitOfWorkCompany _unitOfWork;
 
         private readonly UserManager _userManager;
-        private readonly OrganizationManager _organizationManager;
         private User _user;
 
         public UserAuthController(CompanyDbContext dbContext, IHttpContextAccessor httpContextAccessor)
@@ -24,9 +26,10 @@ namespace ServiceElectronicQueue.Controllers
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = new UnitOfWorkCompany(dbContext);
             _userManager = new UserManager(_unitOfWork);
-            _organizationManager = new OrganizationManager(_unitOfWork);
+            //_organizationManager = new OrganizationManager(_unitOfWork);
             _user = new User();
         }
+
 
         /// <summary>
         /// Регистрация пользователя, GET
@@ -60,7 +63,7 @@ namespace ServiceElectronicQueue.Controllers
                             .Select(s => s)
                             .FirstOrDefault() == null)
                     {
-                        JsonSerializerOptions options = new JsonSerializerOptions()
+                        JsonSerializerOptions options = new JsonSerializerOptions
                         {
                             ReferenceHandler = ReferenceHandler.Preserve,
                             WriteIndented = true
@@ -68,15 +71,36 @@ namespace ServiceElectronicQueue.Controllers
                         //отправка статуса auth пользователя в Account контроллер
                         //статус - 1
                         //точка отправки - UserRegister
-                        _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus", JsonSerializer.Serialize(userAuthStatusPost));
+                        _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
+                            JsonSerializer.Serialize(userAuthStatusPost, options));
 
-                        return RedirectToAction("UserAccount", "UserAccount", new
-                        {
-                            Email = userRegisterForView.Email, Password = userRegisterForView.Password,
-                            Role = userRegisterForView.Role, Surname = userRegisterForView.Surname,
-                            Name = userRegisterForView.Name,
-                            Patronymic = userRegisterForView.Patronymic, PhoneNumber = userRegisterForView.PhoneNumber
-                        });
+                        string jsonUserHttp = JsonSerializer.Serialize(
+                            new UserHttp
+                            {
+                                IdUser = Guid.NewGuid(),
+                                Password = userRegisterForView.Password!,
+                                IdRole = _unitOfWork.RoleRep
+                                    .GetAll()
+                                    .Where(s => s.Amplua == userRegisterForView.Role)
+                                    .Select(s => s.IdRole)
+                                    .First()
+                            }, 
+                            options
+                        );
+                        _httpContextAccessor.HttpContext.Session.SetString("UserDataHttp", jsonUserHttp);
+                        
+                        string jsonUserUrl = JsonSerializer.Serialize(
+                            new UserUrl
+                            {
+                                Email = userRegisterForView.Email!,
+                                Surname = userRegisterForView.Surname!,
+                                Name = userRegisterForView.Name!,
+                                Patronymic = userRegisterForView.Patronymic!,
+                                PhoneNumber = userRegisterForView.PhoneNumber!
+                            },
+                            options
+                        );
+                        return RedirectToAction("UserAccount", "UserAccount", new { jsonUserUrl });
                     }
                 }
             }
@@ -128,14 +152,11 @@ namespace ServiceElectronicQueue.Controllers
                         //отправка статуса auth пользователя в Account контроллер
                         //статус - 2
                         //точка отправки UserLogin
-                        _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus", JsonSerializer.Serialize(userAuthStatusPost));
+                        _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
+                            JsonSerializer.Serialize(userAuthStatusPost, options));
 
-                        return RedirectToAction("UserAccount", "UserAccount", new
-                        {
-                            UserId = user.IdUser, Email = user.Email, Password = user.Password, Role = user.Role,
-                            Surname = user.Surname, Name = user.Name, Patronymic = user.Patronymic,
-                            PhoneNumber = user.PhoneNumber
-                        });
+                        string jsonUser = JsonSerializer.Serialize(user);
+                        return RedirectToAction("UserAccount", "UserAccount", new { jsonUser });
                     }
                 }
             }

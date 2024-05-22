@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
-using ServiceElectronicQueue.DataCheck;
+using ServiceElectronicQueue.ManagersData;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Login;
@@ -15,7 +15,6 @@ public class OrganizationAuthController : Controller
     
     private readonly UnitOfWorkCompany _unitOfWork;
 
-    private readonly UserManager _userManager;
     private readonly OrganizationManager _organizationManager;
     private User _user;
     private Organization _organization;
@@ -24,7 +23,6 @@ public class OrganizationAuthController : Controller
     {
         _httpContextAccessor = httpContextAccessor;
         _unitOfWork = new UnitOfWorkCompany(db);
-        _userManager = new UserManager(_unitOfWork);
         _organizationManager = new OrganizationManager(_unitOfWork);
         _user = new User();
         _organization = new Organization();
