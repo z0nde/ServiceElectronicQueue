@@ -2,10 +2,13 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceElectronicQueue.ManagersData;
+using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Login;
 using ServiceElectronicQueue.Models.ForViews.Register;
+using ServiceElectronicQueue.Models.JsonModels.TransmittingHttp;
+using ServiceElectronicQueue.Models.JsonModels.TransmittingUrl;
 
 namespace ServiceElectronicQueue.Controllers;
 
@@ -33,11 +36,25 @@ public class OrganizationAuthController : Controller
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public IActionResult OrganizationRegister(Guid userId, string email, string password, Guid role,
-        string surname, string name, string patronymic, string phoneNumber)
+    public IActionResult OrganizationRegister(string jsonUserUrl)
     {
-        /*User user = new User(userId, email, password, role, surname, name, patronymic, phoneNumber);
-        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(user));*/
+        JsonSerializerOptions options = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            WriteIndented = true
+        };
+        // получение и десериализация данных из предыдущего контроллера
+        DataComeFrom userAuthStatusPost = JsonSerializer.Deserialize<DataComeFrom>(_httpContextAccessor.HttpContext!.Session.GetString("UserAuthStatus")!, options);
+        UserUrl userUrl = JsonSerializer.Deserialize<UserUrl>(jsonUserUrl, options)!;
+        UserHttp userHttp = JsonSerializer.Deserialize<UserHttp>(_httpContextAccessor.HttpContext!.Session.GetString("UserDataHttp")!, options)!;
+        _httpContextAccessor.HttpContext.Session.Clear();
+        // парсинг данных в класс User
+        _user.SetPropertiesWithoutIdOrganizations(userHttp.IdUser, userUrl.Email, userHttp.Password, userHttp.IdRole, 
+            userUrl.Surname, userUrl.Name, userUrl.Patronymic, userUrl.PhoneNumber);
+        
+        _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
+            JsonSerializer.Serialize(userAuthStatusPost, options));
+        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user, options));
         return View();
     }
 
@@ -53,6 +70,11 @@ public class OrganizationAuthController : Controller
             return View();
         if (_organizationManager.CheckRegister(organizationForView) != null)
         {
+            JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                WriteIndented = true
+            };
             User user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!)!;
             _httpContextAccessor.HttpContext.Session.Clear();
             
@@ -64,13 +86,7 @@ public class OrganizationAuthController : Controller
             _unitOfWork.UsersRep.Create(user);
             _unitOfWork.Save();
             
-            //разобраться, почему теряются данные при переходе на следующую страницу!!!
-            //потом удалить
-            JsonSerializerOptions options = new()
-            {
-                ReferenceHandler = ReferenceHandler.Preserve,
-                WriteIndented = true
-            };
+            
             _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(user, options));
             _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(organization, options));
             

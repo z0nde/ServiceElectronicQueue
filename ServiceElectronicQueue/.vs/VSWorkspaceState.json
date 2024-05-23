@@ -1,7 +1,6 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers",
     "\\Migrations",
     "\\Models",
     "\\Models\\ForViews",
@@ -9,6 +8,7 @@
     "\\Models\\ForViews\\Login",
     "\\Models\\ForViews\\Register",
     "\\Views",
+    "\\Views\\BranchOfficeAuth",
     "\\Views\\Shared"
   ],
   "SelectedNode": "\\Dockerfile",

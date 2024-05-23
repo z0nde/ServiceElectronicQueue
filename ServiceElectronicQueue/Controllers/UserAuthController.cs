@@ -73,31 +73,22 @@ namespace ServiceElectronicQueue.Controllers
                         //точка отправки - UserRegister
                         _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
                             JsonSerializer.Serialize(userAuthStatusPost, options));
-
+                        
+                        // распарсинг данных на классы, отвественные за перенаправление определённым типом
+                        // перенаправление с помощью http
                         string jsonUserHttp = JsonSerializer.Serialize(
-                            new UserHttp
-                            {
-                                IdUser = Guid.NewGuid(),
-                                Password = userRegisterForView.Password!,
-                                IdRole = _unitOfWork.RoleRep
-                                    .GetAll()
+                            new UserHttp(Guid.NewGuid(), userRegisterForView.Password!, 
+                                _unitOfWork.RoleRep.GetAll()
                                     .Where(s => s.Amplua == userRegisterForView.Role)
-                                    .Select(s => s.IdRole)
-                                    .First()
-                            }, 
+                                    .Select(s => s.IdRole).First()),
                             options
                         );
                         _httpContextAccessor.HttpContext.Session.SetString("UserDataHttp", jsonUserHttp);
                         
+                        // перенаправление с помощью url адреса
                         string jsonUserUrl = JsonSerializer.Serialize(
-                            new UserUrl
-                            {
-                                Email = userRegisterForView.Email!,
-                                Surname = userRegisterForView.Surname!,
-                                Name = userRegisterForView.Name!,
-                                Patronymic = userRegisterForView.Patronymic!,
-                                PhoneNumber = userRegisterForView.PhoneNumber!
-                            },
+                            new UserUrl(userRegisterForView.Email!, userRegisterForView.Surname!, userRegisterForView.Name!,
+                                userRegisterForView.Patronymic!, userRegisterForView.PhoneNumber!),
                             options
                         );
                         return RedirectToAction("UserAccount", "UserAccount", new { jsonUserUrl });
@@ -155,8 +146,20 @@ namespace ServiceElectronicQueue.Controllers
                         _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
                             JsonSerializer.Serialize(userAuthStatusPost, options));
 
-                        string jsonUser = JsonSerializer.Serialize(user);
-                        return RedirectToAction("UserAccount", "UserAccount", new { jsonUser });
+                        // распарсинг данных на классы, отвественные за перенаправление определённым типом
+                        // перенаправление с помощью http
+                        string jsonUserHttp = JsonSerializer.Serialize(
+                            new UserHttp(Guid.NewGuid(), user.Password, user.IdRole),
+                            options
+                        );
+                        _httpContextAccessor.HttpContext.Session.SetString("UserDataHttp", jsonUserHttp);
+                        
+                        // перенаправление с помощью url адреса
+                        string jsonUserUrl = JsonSerializer.Serialize(
+                            new UserUrl(user.Email, user.Surname, user.Name, user.Patronymic, user.PhoneNumber),
+                            options
+                        );
+                        return RedirectToAction("UserAccount", "UserAccount", new { jsonUserUrl });
                     }
                 }
             }
