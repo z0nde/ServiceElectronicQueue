@@ -83,7 +83,7 @@ namespace ServiceElectronicQueue.Controllers
             (DataComeFrom userAuthStatusPost, _user) = container.ParseDeserialize();
             
             string jsonUserUrl = container.ParseSerialize(userAuthStatusPost, _user);
-            return RedirectToAction("OrganizationLogin", "OrganizationAuth");
+            return RedirectToAction("OrganizationLogin", "OrganizationAuth", new { jsonUserUrl });
         }
 
 
@@ -99,7 +99,7 @@ namespace ServiceElectronicQueue.Controllers
             (DataComeFrom userAuthStatusPost, _user) = container.ParseDeserialize();
             
             string jsonUserUrl = container.ParseSerialize(userAuthStatusPost, _user);
-            return RedirectToAction();
+            return RedirectToAction("BranchOfficeRegister", "BranchOfficeAuth", new {jsonUserUrl});
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace ServiceElectronicQueue.Controllers
             (DataComeFrom userAuthStatusPost, _user) = container.ParseDeserialize();
             
             string jsonUserUrl = container.ParseSerialize(userAuthStatusPost, _user);
-            return RedirectToAction();
+            return RedirectToAction("BranchOfficeLogin", "BranchOfficeAuth", new {jsonUserUrl});
         }
 
 

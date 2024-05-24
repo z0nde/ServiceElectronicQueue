@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData;
+using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.WithOrganization;
 using ServiceElectronicQueue.ManagersData;
 using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
@@ -58,30 +59,27 @@ public class OrganizationAuthController : Controller
             return View();
         if (_organizationManager.CheckRegister(organizationForView) != null)
         {
-            JsonSerializerOptions options = new()
-            {
-                ReferenceHandler = ReferenceHandler.Preserve,
-                WriteIndented = true
-            };
-            User user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!)!;
-            _httpContextAccessor.HttpContext.Session.Clear();
+            ParserTransmittingPostDataContainer container = new ParserTransmittingPostDataContainer(_httpContextAccessor);
+            (DataComeFrom userAuthStatus, User user) = container.ParseDeserialize();
             
             Organization organization = _organizationManager.RegisterToDb(organizationForView);
-            _unitOfWork.OrganizationsRep.Create(organization);
-            _unitOfWork.Save();
 
-            user.IdOrganization = organization.IdOrganization;
-            _unitOfWork.UsersRep.Create(user);
-            _unitOfWork.Save();
-            
-            
-            _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(user, options));
-            _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(organization, options));
-            
-            return RedirectToAction("OrganizationAccount", "OrganizationAccount", new
+            if (userAuthStatus.AuthStatus == 1)
             {
-                organization.IdOrganization, user.IdUser, user.IdRole
-            });
+                _unitOfWork.OrganizationsRep.Create(organization);
+                _unitOfWork.Save();
+
+                user.IdOrganization = organization.IdOrganization;
+                _unitOfWork.UsersRep.Create(user);
+                _unitOfWork.Save();
+            }
+
+            ParserTransmittingPostDataContainerWithOrganization containerWithOrganization =
+                new ParserTransmittingPostDataContainerWithOrganization(_httpContextAccessor);
+            (string jsonUserUrl, string jsonOrgUrl) = containerWithOrganization.ParseSerialize(userAuthStatus, user, organization);
+            //todo "сделать orgAuthStatus";
+            return RedirectToAction("OrganizationAccount", "OrganizationAccount", new 
+            { jsonUserUrl, jsonOrgUrl });
         }
 
         return View();

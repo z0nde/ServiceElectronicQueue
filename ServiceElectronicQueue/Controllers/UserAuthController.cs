@@ -64,13 +64,17 @@ namespace ServiceElectronicQueue.Controllers
                             .Select(s => s)
                             .FirstOrDefault() == null)
                     {
-                        
-                        //отправка статуса auth пользователя в Account контроллер
-                        //статус - 1
-                        //точка отправки - UserRegister
-                        // распарсинг данных на классы, отвественные за перенаправление определённым типом
-                        // перенаправление с помощью http
-                        // перенаправление с помощью url адреса
+                        _user.SetPropertiesWithoutIdOrganizations(
+                            Guid.NewGuid(),
+                            userRegisterForView.Email!,
+                            userRegisterForView.Password!,
+                            _unitOfWork.RoleRep.GetAll().Where(s => s.Amplua == userRegisterForView.Role)
+                                .Select(s => s.IdRole).First(),
+                            userRegisterForView.Surname!,
+                            userRegisterForView.Name!,
+                            userRegisterForView.Patronymic!,
+                            userRegisterForView.PhoneNumber!
+                        );
                         ParserTransmittingPostDataContainer container =
                             new ParserTransmittingPostDataContainer(_httpContextAccessor);
                         string jsonUserUrl = container.ParseSerialize(userAuthStatusPost, _user);

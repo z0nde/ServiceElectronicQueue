@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Migrations",
+    "\\ControllersContainers",
+    "\\ControllersContainers\\ParserTransmittingData",
     "\\Models",
     "\\Models\\ForViews",
-    "\\Models\\ForViews\\Account",
     "\\Models\\ForViews\\Login",
     "\\Models\\ForViews\\Register",
     "\\Views",
     "\\Views\\BranchOfficeAuth",
     "\\Views\\Shared"
   ],
-  "SelectedNode": "\\Dockerfile",
+  "SelectedNode": "\\ControllersContainers\\ParserTransmittingData\\ParserTransmittingGetDataContainer.cs",
   "PreviewInSolutionExplorer": false
 }

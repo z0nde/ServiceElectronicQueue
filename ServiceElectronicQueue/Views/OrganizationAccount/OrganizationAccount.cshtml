@@ -6,7 +6,7 @@
     <h4> В аккаунт организации вошёл: @Model.Surname @Model.Name @Model.Patronymic</h4>
     <h4>Уникальный ключ: @Model.UniqueKey</h4>
 </div>
-
+@*todo "сделать проверку на orgAuthStatus, и в зависимости от этого, видимость кнопки";*@
 <div style="text-align: right">
     <form asp-controller="OrganizationAccount" asp-action="OrganizationAccountGenerateUniqueKey" method="post">
         <button type="submit" class="btn btn-primary">Создать уникальный ключ для подключения филиалов</button>

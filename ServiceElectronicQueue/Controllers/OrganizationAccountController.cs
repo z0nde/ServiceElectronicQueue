@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.WithOrganization;
 using ServiceElectronicQueue.ManagersData;
+using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Account;
@@ -28,25 +28,12 @@ public class OrganizationAccountController : Controller
     }
     
     [HttpGet]
-    public IActionResult OrganizationAccount(Guid orgId, Guid userId, Guid roleId)
+    public IActionResult OrganizationAccount(string jsonUserUrl, string jsonOrgUrl)
     {
-        //разобраться, почему теряются данные при переходе на эту страницу!!!
-        //потом удалить
-        JsonSerializerOptions options = new()
-        {
-            ReferenceHandler = ReferenceHandler.Preserve,
-            WriteIndented = true
-        };
-        _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!, options)!;
-        _organization = JsonSerializer.Deserialize<Organization>(_httpContextAccessor.HttpContext!.Session.GetString("OrganizationData")!, options)!;
-        _httpContextAccessor.HttpContext.Session.Clear();
+        ParserTransmittingGetDataContainerWithOrganization containerWithOrganization =
+            new ParserTransmittingGetDataContainerWithOrganization(_httpContextAccessor);
+        (DataComeFrom userAuthStatus, _user, _organization) = containerWithOrganization.ParseDeserialize(jsonUserUrl, jsonOrgUrl);
         
-        //потом раскомментить
-        /*_user = _unitOfWork.UsersRep.GetByIndex(userId);
-        _organization = _unitOfWork.OrganizationsRep.GetByIndex(orgId);*/
-        
-        _unitOfWork.OrganizationsRep.Update(_organization);
-        _unitOfWork.Save();
         var model = new OrganizationAccountForView
         {
             Title = _organization.Title,
@@ -56,23 +43,16 @@ public class OrganizationAccountController : Controller
             UniqueKey = _organization.UniqueKey
         };
         
-        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user, options));
-        _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(_organization, options));
-        
+        containerWithOrganization.ParseSerialize(userAuthStatus, _user, _organization);
         return View(model);
     }
 
     [HttpPost]
     public IActionResult OrganizationAccountGenerateUniqueKey()
     {
-        JsonSerializerOptions options = new()
-        {
-            ReferenceHandler = ReferenceHandler.Preserve,
-            WriteIndented = true
-        };
-        _user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!, options)!;
-        _organization = JsonSerializer.Deserialize<Organization>(_httpContextAccessor.HttpContext.Session.GetString("OrganizationData")!, options)!;
-        _httpContextAccessor.HttpContext.Session.Clear();
+        ParserTransmittingPostDataContainerWithOrganization containerWithOrganization =
+            new ParserTransmittingPostDataContainerWithOrganization(_httpContextAccessor);
+        (DataComeFrom userAuthStatus, _user, _organization) = containerWithOrganization.ParseDeserialize();
         
         Random rnd = new();
         string uniqueKey = Convert.ToString(rnd.Next(0, 99999999));
@@ -88,18 +68,33 @@ public class OrganizationAccountController : Controller
             _unitOfWork.OrganizationsRep.Update(_organization);
             verificationFlagUniqueKey = false;
         }
-        
-        //разобраться, почему теряются данные при переходе на эту страницу!!!
-        //потом удалить
-        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user, options));
-        _httpContextAccessor.HttpContext!.Session.SetString("OrganizationData", JsonSerializer.Serialize(_organization, options));
-        
+
+        (string jsonUserUrl, string jsonOrgUrl) = containerWithOrganization.ParseSerialize(userAuthStatus, _user, _organization);
+        string generatedUniqueKey = "Generated Unique Key";
         return RedirectToAction("OrganizationAccount", "OrganizationAccount", new
+        { jsonUserUrl, jsonOrgUrl,  generatedUniqueKey});
+    }
+    
+    [HttpGet]
+    public IActionResult OrganizationAccount(string jsonUserUrl, string jsonOrgUrl, string generatedUniqueKey)
+    {
+        ParserTransmittingGetDataContainerWithOrganization containerWithOrganization =
+            new ParserTransmittingGetDataContainerWithOrganization(_httpContextAccessor);
+        (DataComeFrom userAuthStatus, _user, _organization) = containerWithOrganization.ParseDeserialize(jsonUserUrl, jsonOrgUrl);
+        
+        _unitOfWork.OrganizationsRep.Update(_organization);
+        _unitOfWork.Save();
+        var model = new OrganizationAccountForView
         {
-            OrganizationId = _organization.IdOrganization, 
-            UserId = _user.IdUser, 
-            Role = _user.IdRole
-        });
+            Title = _organization.Title,
+            Surname = _user.Surname,
+            Name = _user.Name,
+            Patronymic = _user.Patronymic,
+            UniqueKey = _organization.UniqueKey
+        };
+        
+        
+        return View(model);
     }
 
     protected override void Dispose(bool disposing)
