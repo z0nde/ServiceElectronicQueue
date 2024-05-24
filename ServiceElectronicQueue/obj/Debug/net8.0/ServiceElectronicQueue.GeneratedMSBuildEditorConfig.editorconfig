@@ -18,8 +18,8 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Account/BranchOfficeAccount.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxCcmFuY2hPZmZpY2VBY2NvdW50LmNzaHRtbA==
+[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/BranchOfficeAccount/BranchOfficeAccount.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnJhbmNoT2ZmaWNlQWNjb3VudFxCcmFuY2hPZmZpY2VBY2NvdW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/BranchOfficeAuth/BranchOfficeLogin.cshtml]

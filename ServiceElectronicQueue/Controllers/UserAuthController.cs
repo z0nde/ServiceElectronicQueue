@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData;
 using ServiceElectronicQueue.ManagersData;
 using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
@@ -63,34 +64,17 @@ namespace ServiceElectronicQueue.Controllers
                             .Select(s => s)
                             .FirstOrDefault() == null)
                     {
-                        JsonSerializerOptions options = new JsonSerializerOptions
-                        {
-                            ReferenceHandler = ReferenceHandler.Preserve,
-                            WriteIndented = true
-                        };
+                        
                         //отправка статуса auth пользователя в Account контроллер
                         //статус - 1
                         //точка отправки - UserRegister
-                        _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
-                            JsonSerializer.Serialize(userAuthStatusPost, options));
-                        
                         // распарсинг данных на классы, отвественные за перенаправление определённым типом
                         // перенаправление с помощью http
-                        string jsonUserHttp = JsonSerializer.Serialize(
-                            new UserHttp(Guid.NewGuid(), userRegisterForView.Password!, 
-                                _unitOfWork.RoleRep.GetAll()
-                                    .Where(s => s.Amplua == userRegisterForView.Role)
-                                    .Select(s => s.IdRole).First()),
-                            options
-                        );
-                        _httpContextAccessor.HttpContext.Session.SetString("UserDataHttp", jsonUserHttp);
-                        
                         // перенаправление с помощью url адреса
-                        string jsonUserUrl = JsonSerializer.Serialize(
-                            new UserUrl(userRegisterForView.Email!, userRegisterForView.Surname!, userRegisterForView.Name!,
-                                userRegisterForView.Patronymic!, userRegisterForView.PhoneNumber!),
-                            options
-                        );
+                        ParserTransmittingPostDataContainer container =
+                            new ParserTransmittingPostDataContainer(_httpContextAccessor);
+                        string jsonUserUrl = container.ParseSerialize(userAuthStatusPost, _user);
+                        
                         return RedirectToAction("UserAccount", "UserAccount", new { jsonUserUrl });
                     }
                 }
@@ -135,30 +119,16 @@ namespace ServiceElectronicQueue.Controllers
                     User? user = _unitOfWork.UsersRep.GetByIndex((Guid)userId);
                     if (user != null!)
                     {
-                        JsonSerializerOptions options = new JsonSerializerOptions()
-                        {
-                            ReferenceHandler = ReferenceHandler.Preserve,
-                            WriteIndented = true
-                        };
+                        
                         //отправка статуса auth пользователя в Account контроллер
                         //статус - 2
-                        //точка отправки UserLogin
-                        _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
-                            JsonSerializer.Serialize(userAuthStatusPost, options));
-
                         // распарсинг данных на классы, отвественные за перенаправление определённым типом
                         // перенаправление с помощью http
-                        string jsonUserHttp = JsonSerializer.Serialize(
-                            new UserHttp(Guid.NewGuid(), user.Password, user.IdRole),
-                            options
-                        );
-                        _httpContextAccessor.HttpContext.Session.SetString("UserDataHttp", jsonUserHttp);
-                        
                         // перенаправление с помощью url адреса
-                        string jsonUserUrl = JsonSerializer.Serialize(
-                            new UserUrl(user.Email, user.Surname, user.Name, user.Patronymic, user.PhoneNumber),
-                            options
-                        );
+                        ParserTransmittingPostDataContainer container =
+                            new ParserTransmittingPostDataContainer(_httpContextAccessor);
+                        string jsonUserUrl = container.ParseSerialize(userAuthStatusPost, user);
+                        
                         return RedirectToAction("UserAccount", "UserAccount", new { jsonUserUrl });
                     }
                 }

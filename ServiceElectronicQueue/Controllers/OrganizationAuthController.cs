@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
+using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData;
 using ServiceElectronicQueue.ManagersData;
 using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
@@ -38,23 +39,10 @@ public class OrganizationAuthController : Controller
     [HttpGet]
     public IActionResult OrganizationRegister(string jsonUserUrl)
     {
-        JsonSerializerOptions options = new JsonSerializerOptions
-        {
-            ReferenceHandler = ReferenceHandler.Preserve,
-            WriteIndented = true
-        };
-        // получение и десериализация данных из предыдущего контроллера
-        DataComeFrom userAuthStatusPost = JsonSerializer.Deserialize<DataComeFrom>(_httpContextAccessor.HttpContext!.Session.GetString("UserAuthStatus")!, options);
-        UserUrl userUrl = JsonSerializer.Deserialize<UserUrl>(jsonUserUrl, options)!;
-        UserHttp userHttp = JsonSerializer.Deserialize<UserHttp>(_httpContextAccessor.HttpContext!.Session.GetString("UserDataHttp")!, options)!;
-        _httpContextAccessor.HttpContext.Session.Clear();
-        // парсинг данных в класс User
-        _user.SetPropertiesWithoutIdOrganizations(userHttp.IdUser, userUrl.Email, userHttp.Password, userHttp.IdRole, 
-            userUrl.Surname, userUrl.Name, userUrl.Patronymic, userUrl.PhoneNumber);
+        ParserTransmittingGetDataContainer container = new ParserTransmittingGetDataContainer(_httpContextAccessor);
+        (DataComeFrom userAuthStatusPost, _user) = container.ParseDeserialize(jsonUserUrl);
         
-        _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
-            JsonSerializer.Serialize(userAuthStatusPost, options));
-        _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user, options));
+        container.ParseSerialize(userAuthStatusPost, _user);
         return View();
     }
 
