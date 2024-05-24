@@ -5,14 +5,14 @@ using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.JsonModels.TransmittingHttp;
 using ServiceElectronicQueue.Models.JsonModels.TransmittingUrl;
 
-namespace ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.WithOrganization
+namespace ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.WithBranchOffice
 {
-    public class ParserTransmittingPostDataContainerWithOrganization
+    public class ParserTransmittingPostDataContainerWithBranchOffice
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly JsonSerializerOptions _options;
 
-        public ParserTransmittingPostDataContainerWithOrganization(IHttpContextAccessor httpContextAccessor)
+        public ParserTransmittingPostDataContainerWithBranchOffice(IHttpContextAccessor httpContextAccessor)
         {
             _options = new JsonSerializerOptions
             {
@@ -22,16 +22,16 @@ namespace ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.Wi
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public (DataComeFrom, User, Organization) ParseDeserialize()
+        public (DataComeFrom, User, BranchOffice) ParseDeserialize()
         {
             DataComeFrom userAuthStatusPost = JsonSerializer.Deserialize<DataComeFrom>(_httpContextAccessor.HttpContext!.Session.GetString("UserAuthStatus")!, _options);
             User user = JsonSerializer.Deserialize<User>(_httpContextAccessor.HttpContext!.Session.GetString("UserData")!, _options)!;
-            Organization organization = JsonSerializer.Deserialize<Organization>(_httpContextAccessor.HttpContext!.Session.GetString("OrganizationData")!, _options)!;
+            BranchOffice brOffice = JsonSerializer.Deserialize<BranchOffice>(_httpContextAccessor.HttpContext!.Session.GetString("BrOfficeData")!, _options)!;
             _httpContextAccessor.HttpContext.Session.Clear();
-            return (userAuthStatusPost, user, organization);
+            return (userAuthStatusPost, user, brOffice);
         }
         
-        public (string, string) ParseSerialize(DataComeFrom userAuthStatusPost, User user, Organization organization)
+        public (string, string) ParseSerialize(DataComeFrom userAuthStatusPost, User user, BranchOffice brOffice)
         {
             _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
                 JsonSerializer.Serialize(userAuthStatusPost, _options));
@@ -48,13 +48,13 @@ namespace ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.Wi
             );
             
             string jsonOrganizationHttp = JsonSerializer.Serialize(
-                new OrganizationHttp(
-                    organization.IdOrganization, organization.Password, organization.UniqueKey, organization.Logo),
+                new BranchOfficeHttp(
+                    brOffice.IdBranchOffice, brOffice.Password, brOffice.UniqueLink, brOffice.IdOrganization),
                 _options
             ); 
-            _httpContextAccessor.HttpContext!.Session.SetString("OrganizationDataHttp", jsonOrganizationHttp);
+            _httpContextAccessor.HttpContext!.Session.SetString("BrOfficeDataHttp", jsonOrganizationHttp);
             string jsonOrganizationUrl = JsonSerializer.Serialize(
-                new OrganizationUrl(organization.Email, organization.Title)
+                new OrganizationUrl(brOffice.Email, brOffice.Addres)
             );
 
             return (jsonUserUrl, jsonOrganizationUrl);

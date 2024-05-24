@@ -3,14 +3,14 @@
     "",
     "\\ControllersContainers",
     "\\ControllersContainers\\ParserTransmittingData",
+    "\\ControllersContainers\\ParserTransmittingData\\WithOrganization",
     "\\Models",
     "\\Models\\ForViews",
-    "\\Models\\ForViews\\Login",
     "\\Models\\ForViews\\Register",
     "\\Views",
     "\\Views\\BranchOfficeAuth",
     "\\Views\\Shared"
   ],
-  "SelectedNode": "\\ControllersContainers\\ParserTransmittingData\\ParserTransmittingGetDataContainer.cs",
+  "SelectedNode": "\\ControllersContainers\\ParserTransmittingData\\WithOrganization\\ParserTransmittingGetDataContainerWithOrganization.cs",
   "PreviewInSolutionExplorer": false
 }
