@@ -1,14 +1,12 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData;
+using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.WithBranchOffice;
 using ServiceElectronicQueue.ManagersData;
 using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Login;
 using ServiceElectronicQueue.Models.ForViews.Register;
-using ServiceElectronicQueue.Models.JsonModels.TransmittingHttp;
-using ServiceElectronicQueue.Models.JsonModels.TransmittingUrl;
 
 namespace ServiceElectronicQueue.Controllers
 {
@@ -32,23 +30,10 @@ namespace ServiceElectronicQueue.Controllers
         [HttpGet]
         public IActionResult BranchOfficeRegister(string jsonUserUrl)
         {
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.Preserve,
-                WriteIndented = true
-            };
-            // получение и десериализация данных из предыдущего контроллера
-            DataComeFrom userAuthStatusPost = JsonSerializer.Deserialize<DataComeFrom>(_httpContextAccessor.HttpContext!.Session.GetString("UserAuthStatus")!, options);
-            UserUrl userUrl = JsonSerializer.Deserialize<UserUrl>(jsonUserUrl, options)!;
-            UserHttp userHttp = JsonSerializer.Deserialize<UserHttp>(_httpContextAccessor.HttpContext!.Session.GetString("UserDataHttp")!, options)!;
-            _httpContextAccessor.HttpContext.Session.Clear();
-            // парсинг данных в класс User
-            _user.SetPropertiesWithoutIdOrganizations(userHttp.IdUser, userUrl.Email, userHttp.Password, userHttp.IdRole, 
-                userUrl.Surname, userUrl.Name, userUrl.Patronymic, userUrl.PhoneNumber);
+            ParserTransmittingGetDataContainer container = new ParserTransmittingGetDataContainer(_httpContextAccessor);
+            (DataComeFrom userAuthStatusPost, _user) = container.ParseDeserialize(jsonUserUrl);
             
-            _httpContextAccessor.HttpContext!.Session.SetString("UserAuthStatus",
-                JsonSerializer.Serialize(userAuthStatusPost, options));
-            _httpContextAccessor.HttpContext!.Session.SetString("UserData", JsonSerializer.Serialize(_user, options));
+            container.ParseSerialize(userAuthStatusPost, _user);
             return View();
         }
 
@@ -59,13 +44,32 @@ namespace ServiceElectronicQueue.Controllers
                 return View();
             if (_branchOfficeManager.CheckRegisterModel(branchOfficeRegisterForView) != null)
             {
-                JsonSerializerOptions options = new JsonSerializerOptions
+                Guid? orgId = _unitOfWork.OrganizationsRep.GetAll()
+                    .Where(s => s.UniqueKey == branchOfficeRegisterForView.UniqueKeyOrganization)
+                    .Select(s => s.IdOrganization).FirstOrDefault();
+                if (orgId != null && _unitOfWork.BranchesRep.GetAll()
+                        .Where(s => s.Email == branchOfficeRegisterForView.Email)
+                        .Select(s => s).FirstOrDefault() == null)
                 {
-                    ReferenceHandler = ReferenceHandler.Preserve,
-                    WriteIndented = true
-                };
-                
-                return RedirectToAction();
+                    ParserTransmittingPostDataContainer container =
+                        new ParserTransmittingPostDataContainer(_httpContextAccessor);
+                    (DataComeFrom userAuthStatus, _user) = container.ParseDeserialize();
+                    
+                    _branchOffice.SetProperties(
+                        Guid.NewGuid(),
+                        branchOfficeRegisterForView.Email!,
+                        branchOfficeRegisterForView.Password!,
+                        branchOfficeRegisterForView.Addres!,
+                        null,
+                        (Guid)orgId
+                    );
+                    ParserTransmittingPostDataContainerWithBranchOffice containerWithBrOffice =
+                        new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+                    (string jsonUserUrl, string jsonBrOfficeUrl) = containerWithBrOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+                    
+                    return RedirectToAction("BranchOfficeAccount", "BranchOfficeAccount", new 
+                        {jsonUserUrl, jsonBrOfficeUrl});
+                }
             }
             return View();
         }
@@ -73,8 +77,12 @@ namespace ServiceElectronicQueue.Controllers
         
         
         [HttpGet]
-        public IActionResult BranchOfficeLogin()
+        public IActionResult BranchOfficeLogin(string jsonUserUrl)
         {
+            ParserTransmittingGetDataContainer container = new ParserTransmittingGetDataContainer(_httpContextAccessor);
+            (DataComeFrom userAuthStatusPost, _user) = container.ParseDeserialize(jsonUserUrl);
+            
+            container.ParseSerialize(userAuthStatusPost, _user);
             return View();
         }
 
@@ -85,10 +93,32 @@ namespace ServiceElectronicQueue.Controllers
                 return View();
             if (_branchOfficeManager.CheckLoginModel(branchOfficeLoginForView) != null)
             {
-                
-                return RedirectToAction();
+                Guid? brOfficeId = _unitOfWork.BranchesRep.GetAll()
+                    .Where(s => s.Email == branchOfficeLoginForView.Email && s.Password == branchOfficeLoginForView.Password)
+                    .Select(s => s.IdBranchOffice).FirstOrDefault();
+                if (brOfficeId != null)
+                {
+                    ParserTransmittingPostDataContainer container =
+                        new ParserTransmittingPostDataContainer(_httpContextAccessor);
+                    (DataComeFrom userAuthStatus, _user) = container.ParseDeserialize();
+                    
+                    _branchOffice = _unitOfWork.BranchesRep.GetByIndex((Guid)brOfficeId);
+
+                    ParserTransmittingPostDataContainerWithBranchOffice containerWithBrOffice =
+                        new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+                    (string jsonUserUrl, string jsonBrOfficeUrl) = containerWithBrOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+                    
+                    return RedirectToAction("BranchOfficeAccount", "BranchOfficeAccount", new 
+                        {jsonUserUrl, jsonBrOfficeUrl});
+                }
             }
             return View();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _unitOfWork.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

@@ -123,12 +123,6 @@ namespace ServiceElectronicQueue.Controllers
                     User? user = _unitOfWork.UsersRep.GetByIndex((Guid)userId);
                     if (user != null!)
                     {
-                        
-                        //отправка статуса auth пользователя в Account контроллер
-                        //статус - 2
-                        // распарсинг данных на классы, отвественные за перенаправление определённым типом
-                        // перенаправление с помощью http
-                        // перенаправление с помощью url адреса
                         ParserTransmittingPostDataContainer container =
                             new ParserTransmittingPostDataContainer(_httpContextAccessor);
                         string jsonUserUrl = container.ParseSerialize(userAuthStatusPost, user);
