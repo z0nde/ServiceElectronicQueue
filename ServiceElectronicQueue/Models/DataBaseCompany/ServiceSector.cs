@@ -3,9 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
-    public class Services
+    public class Service
     {
         [Key] public Guid IdServices { get; set; }
+        public uint NumberService { get; set; }
         public string Service { get; set; }
 
         public Guid IdBranchOffice { get; set; }
@@ -15,7 +16,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
 
         public virtual ICollection<ElectronicQueue> ElectronicQueues { get; set; }
 
-        public Services()
+        public Service()
         { }
+
+        public Service(Guid idServices, uint numberService, string service, Guid idBranchOffice) =>
+            (IdServices, NumberService, Service, IdBranchOffice) = (idServices, numberService, service, idBranchOffice);
     }
 }
