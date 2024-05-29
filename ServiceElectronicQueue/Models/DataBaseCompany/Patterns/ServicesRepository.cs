@@ -2,18 +2,18 @@
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
 {
-    public class ServicesRepository : IRepository<Services>
+    public class ServicesRepository : IRepository<ServiceSector>
     {
         private readonly CompanyDbContext _db;
 
         public ServicesRepository(CompanyDbContext context) => _db = context;
         
-        public IEnumerable<Services> GetAll()
+        public IEnumerable<ServiceSector> GetAll()
         {
             return _db.Services;
         }
 
-        public Services GetByIndex(Guid id)
+        public ServiceSector GetByIndex(Guid id)
         {
             return _db.Services
                 .Where(s => s.IdServices == id)
@@ -21,21 +21,21 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
                 .First();
         }
 
-        public void Create(Services item)
+        public void Create(ServiceSector item)
         {
             _db.Services.Add(item);
         }
 
-        public void Update(Services item)
+        public void Update(ServiceSector item)
         {
             _db.Entry(item).State = EntityState.Modified;
         }
 
         public void Delete(Guid id)
         {
-            Services service = _db.Services.Find(id);
-            if (service != null)
-                _db.Services.Remove(service);
+            ServiceSector serviceSector = _db.Services.Find(id);
+            if (serviceSector != null)
+                _db.Services.Remove(serviceSector);
         }
     }
 }

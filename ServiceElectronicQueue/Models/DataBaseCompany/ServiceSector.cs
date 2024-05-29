@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
-    public class Service
+    public class ServiceSector
     {
         [Key] public Guid IdServices { get; set; }
         public uint NumberService { get; set; }
@@ -16,10 +16,10 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
 
         public virtual ICollection<ElectronicQueue> ElectronicQueues { get; set; }
 
-        public Service()
+        public ServiceSector()
         { }
 
-        public Service(Guid idServices, uint numberService, string service, Guid idBranchOffice) =>
+        public ServiceSector(Guid idServices, uint numberService, string service, Guid idBranchOffice) =>
             (IdServices, NumberService, Service, IdBranchOffice) = (idServices, numberService, service, idBranchOffice);
     }
 }

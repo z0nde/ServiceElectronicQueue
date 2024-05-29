@@ -14,7 +14,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public Guid IdServices { get; set; }
         
         [ForeignKey("IdServices")]
-        public virtual Services Services { get; set; }
+        public virtual ServiceSector ServiceSector { get; set; }
 
         public ElectronicQueue()
         { }

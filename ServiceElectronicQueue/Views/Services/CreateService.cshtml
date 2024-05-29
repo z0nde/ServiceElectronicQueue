@@ -1,0 +1,21 @@
+﻿@model ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesFormForView
+
+<h2>Добавить сервис</h2>
+
+<form asp-action="CreateService" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="NumberService" class="control-label">Номер сервиса</label>
+        <input asp-for="NumberService" class="form-control" />
+        <span asp-validation-for="NumberService" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Service" class="control-label">Сервис</label>
+        <input asp-for="Service" class="form-control" />
+        <span asp-validation-for="Service" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <input type="submit" value="Добавить" class="btn btn-primary" />
+    </div>
+</form>

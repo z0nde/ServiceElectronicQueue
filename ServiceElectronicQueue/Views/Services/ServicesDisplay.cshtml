@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesFormForView>
+
+<h2>Менеджер сервисов</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Номер сервиса</th>
+        <th>Сервис</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.NumberService)</td>
+            <td>@Html.DisplayFor(modelItem => item.Service)</td>
+            <td>
+                <a asp-action="CreateService" asp-route-id="@item.NumberService">Добавить</a>
+                <a asp-action="UpdateService" asp-route-id="@item.NumberService">Изменить</a> |
+                <a asp-action="DeleteService" asp-route-id="@item.NumberService">Удалить</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

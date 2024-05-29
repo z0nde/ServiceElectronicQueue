@@ -8,7 +8,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public virtual DbSet<BranchOffice> BranchOffices { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<Services> Services { get; set; }
+        public virtual DbSet<ServiceSector> Services { get; set; }
         public virtual DbSet<ElectronicQueue> ElectronicQueues { get; set; }
 
         /*public CompanyDbContext()

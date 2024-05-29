@@ -17,7 +17,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         [ForeignKey("IdOrganization")]
         public virtual Organization Organization { get; set; }
         
-        public virtual ICollection<Services> Services { get; set; }
+        public virtual ICollection<ServiceSector> Services { get; set; }
 
         public BranchOffice()
         { }
