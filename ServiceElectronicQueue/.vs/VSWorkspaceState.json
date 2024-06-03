@@ -1,16 +1,16 @@
 {
   "ExpandedNodes": [
     "",
+    "\\Controllers",
     "\\ControllersContainers",
     "\\ControllersContainers\\ParserTransmittingData",
     "\\ControllersContainers\\ParserTransmittingData\\WithBranchOffice",
+    "\\ControllersContainers\\ParserTransmittingData\\WithOrganization",
+    "\\ManagersData",
     "\\Models",
-    "\\Models\\ForViews",
-    "\\Models\\ForViews\\Register",
     "\\Views",
-    "\\Views\\BranchOfficeAuth",
-    "\\Views\\Shared"
+    "\\Views\\UserAuth"
   ],
-  "SelectedNode": "\\ControllersContainers\\ParserTransmittingData\\WithBranchOffice\\ParserTransmittingGetDataContainerWithBranchOffice.cs",
+  "SelectedNode": "\\ServiceElectronicQueue.csproj.user",
   "PreviewInSolutionExplorer": false
 }

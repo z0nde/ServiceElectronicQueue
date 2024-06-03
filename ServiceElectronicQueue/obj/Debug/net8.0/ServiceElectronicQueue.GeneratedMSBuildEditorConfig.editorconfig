@@ -30,16 +30,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnJhbmNoT2ZmaWNlQXV0aFxCcmFuY2hPZmZpY2VSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Home/UserLogin.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxVc2VyTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/OrganizationAccount/OrganizationAccount.cshtml]
@@ -52,6 +44,22 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/OrganizationAuth/OrganizationRegister.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JnYW5pemF0aW9uQXV0aFxPcmdhbml6YXRpb25SZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Services/CreateService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZXNcQ3JlYXRlU2VydmljZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Services/DeleteService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZXNcRGVsZXRlU2VydmljZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Services/ServicesDisplay.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZXNcU2VydmljZXNEaXNwbGF5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Services/UpdateService.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZXNcVXBkYXRlU2VydmljZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Shared/Error.cshtml]
