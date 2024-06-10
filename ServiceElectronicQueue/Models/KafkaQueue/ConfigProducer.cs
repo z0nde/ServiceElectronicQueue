@@ -1,8 +1,8 @@
 ﻿namespace ServiceElectronicQueue.Models.KafkaQueue;
 
-public class KafkaConfig
+public class ConfigProducer
 {
-    public string BootstrapServers { get; set; }
-    public string Topic { get; set; }
-    public string GroupId { get; set; }
+    public string ClientId { get; set; }
+    
+    public ConfigProducer(string id) => ClientId = id;
 }

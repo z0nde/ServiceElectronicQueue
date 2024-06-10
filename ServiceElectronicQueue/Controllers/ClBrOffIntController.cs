@@ -4,6 +4,8 @@ using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement;
 using ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesAndElectronicQueue;
+using ServiceElectronicQueue.Models.JsonModels;
+using ServiceElectronicQueue.Models.KafkaQueue;
 
 namespace ServiceElectronicQueue.Controllers
 {
@@ -51,15 +53,21 @@ namespace ServiceElectronicQueue.Controllers
             return View(model);
         }
 
-        public IActionResult RecordToQueue()
+        public IActionResult RecordToQueue(int numberService)
         {
             Guid idBrOffice = JsonSerializer.Deserialize<Guid>(_httpContextAccessor.HttpContext!.Session
                 .GetString("ClientRecordToQueue")!);
             _httpContextAccessor.HttpContext.Session.Clear();
-            //todo "сюда интегрировать подписку в кафку, запись в бд и многопоточность."; 
+
+            string service = _unitOfWork.ServicesRep.GetAll()
+                .Where(s => s.IdBranchOffice == idBrOffice && s.NumberService == numberService)
+                .Select(s => s.Service).First();
             
-            
-            return RedirectToAction();
+            var producer = new ProducerQueueService(KafkaFactory.CreateProducer(
+                new ConfigProducer(JsonSerializer.Serialize(idBrOffice))), ConfigKafka.Topic); 
+            producer.PostMessage(
+                JsonSerializer.Serialize(new KafkaQuery(Rand.Str(2), numberService, service)));
+            return RedirectToAction("DisplayQueue", new {});
         }
         
         
@@ -75,7 +83,8 @@ namespace ServiceElectronicQueue.Controllers
         public IActionResult GetUrlLink(string idBrOffice)
         {
             
-            string url = $"https://{Request.Host}{Request.PathBase}/ClBrOffIntController/ClientServiceDisplay?{idBrOffice}";
+            string url = 
+                $"https://{Request.Host}{Request.PathBase}/ClBrOffIntController/ClientServiceDisplay?{idBrOffice}";
             return RedirectToAction();
         }
         
