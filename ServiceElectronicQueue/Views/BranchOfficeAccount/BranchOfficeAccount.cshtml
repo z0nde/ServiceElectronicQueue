@@ -1,1 +1,19 @@
-﻿
+﻿@model ServiceElectronicQueue.Models.ForViews.Account.BranchOfficeAccountForView
+
+<div style="text-align: left">
+    <h2>Компания: @Model.TitleOrganization</h2>
+    @*<button></button>*@
+    <h4> В аккаунт филиала вошёл: @Model.Surname @Model.Name @Model.Patronymic</h4>
+    <h4> Адрес: @Model.Addres</h4>
+    <h4>Уникальная ссылка филиала: @Model.UniqueLink</h4>
+</div>
+
+<div style="text-align: right">
+    <form asp-controller="BranchOfficeAccount" asp-action="Services" method="post">
+        <button type="submit" class="btn btn-primary">Сервисы/Услуги филиала</button>
+    </form><br/>
+    
+    <form asp-controller="BranchOfficeAccount" asp-action="GenerateUniqueLink" method="post">
+        <button type="submit" class="btn btn-primary">Создать уникальную ссылку на элкутронную очерель филиала</button>
+    </form><br/>
+</div>

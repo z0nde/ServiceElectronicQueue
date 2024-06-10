@@ -5,7 +5,7 @@
         IEnumerable<T> GetAll();
         T GetByIndex(Guid id);
         void Create(T item);
-        void Update(T item);
+        void Update(Guid id, T newItem);
         void Delete(Guid id);
     }
 }

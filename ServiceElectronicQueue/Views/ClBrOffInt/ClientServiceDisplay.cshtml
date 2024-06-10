@@ -1,0 +1,24 @@
+﻿@model ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesAndElectronicQueue.ClientDisplayServices
+
+<h2>Организация: @Model.Organization</h2>
+<h3>Адрес филиала: @Model.BranchOfficeAddres</h3>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Сервис / услуга</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.ServicesFormForViews)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.NumberService)</td>
+            <td>@Html.DisplayFor(modelItem => item.Service)</td>
+            <td>
+                <a asp-action="RecordToQueue" asp-route-id="@item.NumberService">Записаться в очередь</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

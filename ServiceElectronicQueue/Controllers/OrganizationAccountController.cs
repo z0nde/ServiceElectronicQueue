@@ -65,25 +65,23 @@ public class OrganizationAccountController : Controller
                     .Select(s => s.UniqueKey)
                     .FirstOrDefault() != null) continue;
             _organization.UniqueKey = uniqueKey;
-            _unitOfWork.OrganizationsRep.Update(_organization);
+            _unitOfWork.OrganizationsRep.Update(_organization.IdOrganization, _organization);
+            _unitOfWork.Save();
             verificationFlagUniqueKey = false;
         }
 
         (string jsonUserUrl, string jsonOrgUrl) = containerWithOrganization.ParseSerialize(userAuthStatus, _user, _organization);
-        string generatedUniqueKey = "Generated Unique Key";
-        return RedirectToAction("OrganizationAccount", "OrganizationAccount", new
-        { jsonUserUrl, jsonOrgUrl,  generatedUniqueKey});
+        return RedirectToAction("OrganizationAccountWithKey", "OrganizationAccount", new
+            { jsonUserUrl, jsonOrgUrl});
     }
     
     [HttpGet]
-    public IActionResult OrganizationAccount(string jsonUserUrl, string jsonOrgUrl, string generatedUniqueKey)
+    public IActionResult OrganizationAccountWithKey(string jsonUserUrl, string jsonOrgUrl)
     {
         ParserTransmittingGetDataContainerWithOrganization containerWithOrganization =
             new ParserTransmittingGetDataContainerWithOrganization(_httpContextAccessor);
         (DataComeFrom userAuthStatus, _user, _organization) = containerWithOrganization.ParseDeserialize(jsonUserUrl, jsonOrgUrl);
         
-        _unitOfWork.OrganizationsRep.Update(_organization);
-        _unitOfWork.Save();
         var model = new OrganizationAccountForView
         {
             Title = _organization.Title,
@@ -92,7 +90,6 @@ public class OrganizationAccountController : Controller
             Patronymic = _user.Patronymic,
             UniqueKey = _organization.UniqueKey
         };
-        
         
         return View(model);
     }

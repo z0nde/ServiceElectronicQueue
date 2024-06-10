@@ -44,10 +44,10 @@ public class ServicesController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (_serviceManager.CheckModel(service) != null)
+            if (_serviceManager.CheckModel(service) != null && service.NumberService != null)
             {
                 _unitOfWork.ServicesRep.Create(new ServiceSector(
-                    Guid.NewGuid(), (uint)service.NumberService!, service.Service!, new Guid(/*подтянуть сюда http сессии*/)));
+                    Guid.NewGuid(), (int)service.NumberService, service.Service!, new Guid(/*подтянуть сюда http сессии*/)));
                 _unitOfWork.Save();
                 return RedirectToAction(nameof(ServicesDisplay));
             }
@@ -83,8 +83,9 @@ public class ServicesController : Controller
             {
                 if (_serviceManager.CheckModel(service) != null)
                 {
-                    _unitOfWork.ServicesRep.Update(_unitOfWork.ServicesRep.GetAll()
-                        .FirstOrDefault(s => s.NumberService == service.NumberService)!);
+                    var serviceSector = _unitOfWork.ServicesRep.GetAll()
+                        .FirstOrDefault(s => s.NumberService == service.NumberService);
+                    _unitOfWork.ServicesRep.Update(serviceSector.IdServices, serviceSector);
                     _unitOfWork.Save();
                 }
             }

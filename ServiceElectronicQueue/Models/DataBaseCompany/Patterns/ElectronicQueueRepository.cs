@@ -26,9 +26,13 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             _db.ElectronicQueues.Add(item);
         }
 
-        public void Update(ElectronicQueue item)
+        public void Update(Guid id, ElectronicQueue newItem)
         {
-            _db.Entry(item).State = EntityState.Modified;
+            var unitOfWork = new UnitOfWorkCompany(_db);
+            var oldElectQueue = unitOfWork.ElectronicQueueRep.GetByIndex(id);
+            oldElectQueue.NumberService = newItem.NumberService;
+            oldElectQueue.StartService = newItem.StartService;
+            oldElectQueue.EndService = newItem.EndService;
         }
 
         public void Delete(Guid id)

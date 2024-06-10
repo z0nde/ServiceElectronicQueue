@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData;
 using ServiceElectronicQueue.ManagersData;
 using ServiceElectronicQueue.Models;
@@ -9,8 +6,6 @@ using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Login;
 using ServiceElectronicQueue.Models.ForViews.Register;
-using ServiceElectronicQueue.Models.JsonModels.TransmittingHttp;
-using ServiceElectronicQueue.Models.JsonModels.TransmittingUrl;
 
 namespace ServiceElectronicQueue.Controllers
 {
@@ -46,13 +41,14 @@ namespace ServiceElectronicQueue.Controllers
         /// Регистрация пользователя, POST
         /// </summary>
         /// <param name="userRegisterForView"></param>
+        /// <param name="role"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult UserRegister(UserRegisterForView userRegisterForView)
+        public IActionResult UserRegister(UserRegisterForView userRegisterForView/*, string Role*/)
         {
             if (!ModelState.IsValid)
                 return View();
-
+            /*userRegisterForView.Role = Role;*/
             DataComeFrom userAuthStatusPost = new DataComeFrom(1);
             if (_userManager.CheckRegisterModel(userRegisterForView) != null)
             {
@@ -118,7 +114,7 @@ namespace ServiceElectronicQueue.Controllers
                     .Where(s => s.Email == userLoginForView.Email && s.Password == userLoginForView.Password)
                     .Select(s => s.IdUser)
                     .FirstOrDefault();
-                if (userId != null)
+                if (userId != null && userId != Guid.Empty)
                 {
                     User? user = _unitOfWork.UsersRep.GetByIndex((Guid)userId);
                     if (user != null!)
@@ -152,7 +148,7 @@ namespace ServiceElectronicQueue.Controllers
             _unitOfWork.RoleRep.Create(role2);
             _unitOfWork.Save();
             _unitOfWork.Dispose();
-            return RedirectToAction("UserRegister", "UserAuth");
+            return Ok();
         }*/
     }
 }

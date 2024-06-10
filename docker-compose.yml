@@ -11,7 +11,7 @@
     restart: always
     image: postgres:latest
     environment:
-      POSTGRES_DB: "PostgresCompanyDB"
+      POSTGRES_DB: "PostgresCompanyDatabase"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
       PGDATA: /data/postgres

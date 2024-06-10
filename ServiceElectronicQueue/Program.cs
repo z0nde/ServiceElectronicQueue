@@ -11,7 +11,7 @@ string connectionString = builder.Configuration.GetConnectionString("ConnectionC
 builder.Services.AddDbContext<CompanyDbContext>(optionsAction => 
     optionsAction.UseNpgsql(connectionString));
 
-builder.Configuration.AddJsonFile("appsettings.json");
+/*builder.Configuration.AddJsonFile("appsettings.json");
 var kafkaConfig = builder.Configuration.GetSection("Kafka").Get<KafkaConfig>();
 
 // Инициализация продюсера и потребителя в Program.cs
@@ -28,12 +28,12 @@ var consumerConfig = new ConsumerConfig
     GroupId = kafkaConfig.GroupId,
     // Другие настройки потребителя
 };
-var consumer = new ConsumerBuilder<Null, string>(consumerConfig).Build();
+var consumer = new ConsumerBuilder<Null, string>(consumerConfig).Build();*/
 
 // Регистрация зависимостей
-builder.Services.AddSingleton(producer);
+/*builder.Services.AddSingleton(producer);
 builder.Services.AddSingleton(consumer);
-builder.Services.AddSingleton(kafkaConfig.Topic);
+builder.Services.AddSingleton(kafkaConfig.Topic);*/
 
 
 

@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.WithBranchOffice;
 using ServiceElectronicQueue.ManagersData;
 using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Account;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ServiceElectronicQueue.Controllers
 {
@@ -47,10 +49,27 @@ namespace ServiceElectronicQueue.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public IActionResult Services()
         {
-            return RedirectToAction();
+            var containerWithBranchOffice = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+            (DataComeFrom userAuthStatus, _user, _branchOffice) = containerWithBranchOffice.ParseDeserialize();
+
+            var idBrOffice = _branchOffice.IdBranchOffice;
+            return RedirectToAction("ServicesDisplay", "Services", new {idBrOffice});
         }
+
+        [HttpPost]
+        public IActionResult GenerateUniqueLink()
+        {
+            var container = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+            (DataComeFrom userAuthStatus, _user, _branchOffice) = container.ParseDeserialize();
+
+            string idBrOffice = JsonSerializer.Serialize(_branchOffice.IdBranchOffice);
+            return RedirectToAction("GetUrlLink", "ClBrOffInt", new {idBrOffice});
+        }
+        
+        
 
         protected override void Dispose(bool disposing)
         {

@@ -1,0 +1,9 @@
+﻿@model ServiceElectronicQueue.Models.ForViews.Account.OrganizationAccountForView
+
+<div style="text-align: left">
+    <h2>Компания: @Model.Title</h2>
+    @*<button></button>*@
+    <h4> В аккаунт организации вошёл: @Model.Surname @Model.Name @Model.Patronymic</h4>
+    <h4>Уникальный ключ: @Model.UniqueKey</h4>
+</div>
+@*todo "сделать проверку на orgAuthStatus, и в зависимости от этого, видимость кнопки";*@

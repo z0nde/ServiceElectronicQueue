@@ -2,6 +2,6 @@
 
 public class ServicesFormForView
 {
-    public uint? NumberService { get; set; }
+    public int? NumberService { get; set; }
     public string? Service { get; set; }
 }

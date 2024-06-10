@@ -47,7 +47,8 @@ namespace ServiceElectronicQueue.Controllers
                 Guid? orgId = _unitOfWork.OrganizationsRep.GetAll()
                     .Where(s => s.UniqueKey == branchOfficeRegisterForView.UniqueKeyOrganization)
                     .Select(s => s.IdOrganization).FirstOrDefault();
-                if (orgId != null && _unitOfWork.BranchesRep.GetAll()
+                
+                if (orgId != null && orgId != Guid.Empty && _unitOfWork.BranchesRep.GetAll()
                         .Where(s => s.Email == branchOfficeRegisterForView.Email)
                         .Select(s => s).FirstOrDefault() == null)
                 {
@@ -63,6 +64,10 @@ namespace ServiceElectronicQueue.Controllers
                         null,
                         (Guid)orgId
                     );
+                    
+                    _unitOfWork.BranchesRep.Create(_branchOffice);
+                    _unitOfWork.Save();
+                    
                     ParserTransmittingPostDataContainerWithBranchOffice containerWithBrOffice =
                         new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
                     (string jsonUserUrl, string jsonBrOfficeUrl) = containerWithBrOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
@@ -96,7 +101,7 @@ namespace ServiceElectronicQueue.Controllers
                 Guid? brOfficeId = _unitOfWork.BranchesRep.GetAll()
                     .Where(s => s.Email == branchOfficeLoginForView.Email && s.Password == branchOfficeLoginForView.Password)
                     .Select(s => s.IdBranchOffice).FirstOrDefault();
-                if (brOfficeId != null)
+                if (brOfficeId != null && brOfficeId != Guid.Empty)
                 {
                     ParserTransmittingPostDataContainer container =
                         new ParserTransmittingPostDataContainer(_httpContextAccessor);

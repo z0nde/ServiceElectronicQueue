@@ -26,9 +26,11 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             _db.Organizations.Add(item);
         }
 
-        public void Update(Organization item)
+        public void Update(Guid id, Organization newItem)
         {
-            _db.Entry(item).State = EntityState.Modified;
+            var unitOfWork = new UnitOfWorkCompany(_db);
+            var oldOrg = unitOfWork.OrganizationsRep.GetByIndex(id);
+            oldOrg.UniqueKey = newItem.UniqueKey;
         }
 
         public void Delete(Guid id)

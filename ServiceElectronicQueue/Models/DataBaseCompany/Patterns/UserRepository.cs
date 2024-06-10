@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
 {
@@ -29,9 +30,16 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             _db.Users.Add(item);
         }
 
-        public void Update(User item)
+        public void Update(Guid id, User newItem)
         {
-            _db.Entry(item).State = EntityState.Modified;
+            var unitOfWork = new UnitOfWorkCompany(_db);
+            var oldUser = unitOfWork.UsersRep.GetByIndex(id);
+            oldUser.Email = newItem.Email;
+            oldUser.Password = newItem.Password;
+            oldUser.Surname = newItem.Surname;
+            oldUser.Name = newItem.Name;
+            oldUser.Patronymic = oldUser.Patronymic;
+            oldUser.PhoneNumber = newItem.PhoneNumber;
         }
 
         public void Delete(Guid id)

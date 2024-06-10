@@ -26,9 +26,14 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             _db.BranchOffices.Add(item);
         }
 
-        public void Update(BranchOffice item)
+        public void Update(Guid id, BranchOffice newItem)
         {
-            _db.Entry(item).State = EntityState.Modified;
+            var unitOfWork = new UnitOfWorkCompany(_db);
+            var oldBrOffice = unitOfWork.BranchesRep.GetByIndex(id);
+            oldBrOffice.Email = newItem.Email;
+            oldBrOffice.Password = newItem.Password;
+            oldBrOffice.Addres = newItem.Addres;
+            oldBrOffice.UniqueLink = newItem.UniqueLink;
         }
 
         public void Delete(Guid id)

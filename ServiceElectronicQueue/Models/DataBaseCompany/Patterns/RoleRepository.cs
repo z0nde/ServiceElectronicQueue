@@ -26,9 +26,11 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             _db.Roles.Add(item);
         }
 
-        public void Update(Role item)
+        public void Update(Guid id, Role newItem)
         {
-            _db.Entry(item).State = EntityState.Modified;
+            var unitOfWork = new UnitOfWorkCompany(_db);
+            var oldRole = unitOfWork.RoleRep.GetByIndex(id);
+            oldRole.Amplua = newItem.Amplua;
         }
 
         public void Delete(Guid id)

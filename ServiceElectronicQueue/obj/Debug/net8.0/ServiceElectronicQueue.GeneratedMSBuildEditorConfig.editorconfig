@@ -30,12 +30,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnJhbmNoT2ZmaWNlQXV0aFxCcmFuY2hPZmZpY2VSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/ClBrOffInt/ClientServiceDisplay.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xCck9mZkludFxDbGllbnRTZXJ2aWNlRGlzcGxheS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/OrganizationAccount/OrganizationAccount.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JnYW5pemF0aW9uQWNjb3VudFxPcmdhbml6YXRpb25BY2NvdW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/OrganizationAccount/OrganizationAccountWithKey.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JnYW5pemF0aW9uQWNjb3VudFxPcmdhbml6YXRpb25BY2NvdW50V2l0aEtleS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/artem/RiderProjects/ServiceElectronicQueue/ServiceElectronicQueue/Views/OrganizationAuth/OrganizationLogin.cshtml]

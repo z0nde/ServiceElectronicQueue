@@ -90,8 +90,12 @@ public class OrganizationAuthController : Controller
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public IActionResult OrganizationLogin()
+    public IActionResult OrganizationLogin(string jsonUserUrl)
     {
+        ParserTransmittingGetDataContainer container = new ParserTransmittingGetDataContainer(_httpContextAccessor);
+        (DataComeFrom userAuthStatusPost, _user) = container.ParseDeserialize(jsonUserUrl);
+            
+        container.ParseSerialize(userAuthStatusPost, _user);
         return View();
     }
 
@@ -101,9 +105,36 @@ public class OrganizationAuthController : Controller
     /// <param name="organizationLoginForView"></param>
     /// <returns></returns>
     [HttpPost]
-    public IActionResult OrganizationLogin(OrganizationLoginForView organizationLoginForView)
+    public IActionResult OrganizationLogin(OrganizationLoginForView organizationForView)
     {
-        return RedirectToAction();
+        if (!ModelState.IsValid)
+            return View();
+        if (_organizationManager.CheckLogin(organizationForView) != null)
+        {
+            Guid? orgId = _unitOfWork.OrganizationsRep.GetAll()
+                .Where(s => s.Email == organizationForView.Email && s.Password == organizationForView.Password)
+                .Select(s => s.IdOrganization).FirstOrDefault();
+            if (orgId != null && orgId != Guid.Empty)
+            {
+                ParserTransmittingPostDataContainer container =
+                    new ParserTransmittingPostDataContainer(_httpContextAccessor);
+                (DataComeFrom userAuthStatus, _user) = container.ParseDeserialize();
+
+                _organization = _unitOfWork.OrganizationsRep.GetByIndex((Guid)orgId);
+                
+                ParserTransmittingPostDataContainerWithOrganization containerWithOrganization =
+                    new ParserTransmittingPostDataContainerWithOrganization(_httpContextAccessor);
+                (string jsonUserUrl, string jsonOrgUrl) = containerWithOrganization.ParseSerialize(userAuthStatus, _user, _organization);
+                if (_organization.UniqueKey != null)
+                {
+                    return RedirectToAction("OrganizationAccountWithKey", "OrganizationAccount", new 
+                        {jsonUserUrl, jsonOrgUrl});
+                }
+                return RedirectToAction("OrganizationAccount", "OrganizationAccount", new 
+                    {jsonUserUrl, jsonOrgUrl});
+            }
+        }
+        return View();
     }
 
     protected override void Dispose(bool disposing)
