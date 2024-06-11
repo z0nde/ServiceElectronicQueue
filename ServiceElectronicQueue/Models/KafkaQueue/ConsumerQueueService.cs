@@ -17,10 +17,6 @@ public class ConsumerQueueService
     {
         try
         {
-            // Подписка на тему
-            _consumer.Subscribe(_topic);
-
-            // Чтение сообщения
             var consumeResult = _consumer.Consume(TimeSpan.FromSeconds(1));
             if (consumeResult != null)
             {

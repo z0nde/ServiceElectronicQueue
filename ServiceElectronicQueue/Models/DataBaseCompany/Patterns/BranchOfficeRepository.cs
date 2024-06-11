@@ -30,9 +30,6 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
         {
             var unitOfWork = new UnitOfWorkCompany(_db);
             var oldBrOffice = unitOfWork.BranchesRep.GetByIndex(id);
-            oldBrOffice.Email = newItem.Email;
-            oldBrOffice.Password = newItem.Password;
-            oldBrOffice.Addres = newItem.Addres;
             oldBrOffice.UniqueLink = newItem.UniqueLink;
         }
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.WithBranchOffice;
 using ServiceElectronicQueue.ManagersData;
+using ServiceElectronicQueue.Models;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.Account;
@@ -20,15 +22,20 @@ public class ServicesController : Controller
         _unitOfWork = new UnitOfWorkCompany(db);
         _serviceManager = new ServiceManager(_unitOfWork);
     }
-
-    // Получение всех продуктов
-    public IActionResult ServicesDisplay()
+    
+    public IActionResult ServicesDisplay(string jsonUserUrl, string jsonBrOfficeUrl)
     {
+        var containerWithBranchOffice = new ParserTransmittingGetDataContainerWithBranchOffice(_httpContextAccessor);
+        (DataComeFrom userAuthStatus, User user, BranchOffice branchOffice) = containerWithBranchOffice.ParseDeserialize(jsonUserUrl, jsonBrOfficeUrl);
+        
         var services = _unitOfWork.ServicesRep.GetAll();
         var model = services
             .Select(service => new ServicesFormForView 
                 { NumberService = service.NumberService, Service = service.Service })
             .ToList();
+        
+        containerWithBranchOffice.ParseSerialize(userAuthStatus, user, branchOffice);
+        
         return View(model);
     }
     
@@ -125,6 +132,16 @@ public class ServicesController : Controller
             .Select(s => s.IdServices).FirstOrDefault());
         _unitOfWork.Save();
         return RedirectToAction(nameof(ServicesDisplay));
+    }
+
+    [HttpPost]
+    public IActionResult ExitToBranchOfficeAccount()
+    {
+        var containerWithBranchOffice = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+        (DataComeFrom userAuthStatus, User user, BranchOffice branchOffice) = containerWithBranchOffice.ParseDeserialize();
+
+        (string jsonUserUrl, string jsonBrOfficeUrl) = containerWithBranchOffice.ParseSerialize(userAuthStatus, user, branchOffice);
+        return RedirectToAction("BranchOfficeAccount", "BranchOfficeAccount", new {jsonUserUrl, jsonBrOfficeUrl});
     }
 
     protected override void Dispose(bool disposing)

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace ServiceElectronicQueue.Models.DataBaseCompany
 {
@@ -22,12 +23,12 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public BranchOffice()
         { }
         
-        public BranchOffice(Guid idBranchOffice, string email, string password, string addres,
+        public BranchOffice(Guid idBranchOffice, string addres, string email, string password,
             string? uniqueLink, Guid idOrganization) =>
             (IdBranchOffice, Email, Password, Addres, UniqueLink, IdOrganization) =
             (idBranchOffice, email, password, addres, uniqueLink, idOrganization);
         
-        public void SetProperties(Guid idBranchOffice, string email, string password, string addres,
+        public void SetProperties(Guid idBranchOffice, string addres, string email, string password,
             string? uniqueLink, Guid idOrganization) =>
             (IdBranchOffice, Email, Password, Addres, UniqueLink, IdOrganization) =
             (idBranchOffice, email, password, addres, uniqueLink, idOrganization);

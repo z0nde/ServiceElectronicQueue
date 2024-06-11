@@ -30,9 +30,9 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
         {
             var unitOfWork = new UnitOfWorkCompany(_db);
             var oldElectQueue = unitOfWork.ElectronicQueueRep.GetByIndex(id);
-            oldElectQueue.NumberService = newItem.NumberService;
-            oldElectQueue.StartService = newItem.StartService;
-            oldElectQueue.EndService = newItem.EndService;
+            oldElectQueue.NumberInQueue = newItem.NumberInQueue;
+            oldElectQueue.Status = newItem.Status;
+            oldElectQueue.DateAndTimeStatus = newItem.DateAndTimeStatus;
         }
 
         public void Delete(Guid id)

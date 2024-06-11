@@ -64,7 +64,13 @@ namespace ServiceElectronicQueue.Controllers
                         null,
                         (Guid)orgId
                     );
-                    
+
+                    if (userAuthStatus.AuthStatus == 1)
+                    {
+                        _user.IdOrganization = (Guid)orgId;
+                        _unitOfWork.UsersRep.Create(_user);
+                        _unitOfWork.Save();
+                    }
                     _unitOfWork.BranchesRep.Create(_branchOffice);
                     _unitOfWork.Save();
                     
@@ -106,7 +112,13 @@ namespace ServiceElectronicQueue.Controllers
                     ParserTransmittingPostDataContainer container =
                         new ParserTransmittingPostDataContainer(_httpContextAccessor);
                     (DataComeFrom userAuthStatus, _user) = container.ParseDeserialize();
-                    
+
+                    if (userAuthStatus.AuthStatus == 1)
+                    {
+                        _user.IdOrganization = _branchOffice.IdOrganization;
+                        _unitOfWork.UsersRep.Create(_user);
+                        _unitOfWork.Save();
+                    }
                     _branchOffice = _unitOfWork.BranchesRep.GetByIndex((Guid)brOfficeId);
 
                     ParserTransmittingPostDataContainerWithBranchOffice containerWithBrOffice =

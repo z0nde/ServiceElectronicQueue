@@ -108,12 +108,9 @@ namespace ServiceElectronicQueue.Controllers
             DataComeFrom userAuthStatusPost = new DataComeFrom(2);
             if (_userManager.CheckLoginModel(userLoginForView) != null)
             {
-                Guid? userId = _unitOfWork.UsersRep
-                    .GetAll()
-                    .ToList()
+                Guid? userId = _unitOfWork.UsersRep.GetAll().ToList()
                     .Where(s => s.Email == userLoginForView.Email && s.Password == userLoginForView.Password)
-                    .Select(s => s.IdUser)
-                    .FirstOrDefault();
+                    .Select(s => s.IdUser).FirstOrDefault();
                 if (userId != null && userId != Guid.Empty)
                 {
                     User? user = _unitOfWork.UsersRep.GetByIndex((Guid)userId);

@@ -5,6 +5,7 @@ using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement;
 using ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesAndElectronicQueue;
 using ServiceElectronicQueue.Models.JsonModels;
+using ServiceElectronicQueue.Models.JsonModels.TransmittingUrl;
 using ServiceElectronicQueue.Models.KafkaQueue;
 
 namespace ServiceElectronicQueue.Controllers
@@ -26,16 +27,15 @@ namespace ServiceElectronicQueue.Controllers
         /// </summary>
         /// <param name="guidBrOffice"></param>
         /// <returns></returns>
-        public IActionResult ClientServiceDisplay(string idBrOffice)
+        public IActionResult ClientServiceDisplay(Guid BrOffCli)
         {
             //todo "сделать проверки";
-            Guid guidBrOffice = JsonSerializer.Deserialize<Guid>(idBrOffice);
             var brOffice = _unitOfWork.BranchesRep.GetAll()
-                .FirstOrDefault(s => s.IdBranchOffice == guidBrOffice);
+                .FirstOrDefault(s => s.IdBranchOffice == BrOffCli);
             var org = _unitOfWork.OrganizationsRep.GetAll()
                 .FirstOrDefault(s => s.IdOrganization == brOffice.IdOrganization);
             var services = _unitOfWork.ServicesRep.GetAll()
-                .Where(s => s.IdBranchOffice == guidBrOffice).Select(s => s).ToList();
+                .Where(s => s.IdBranchOffice == BrOffCli).Select(s => s).ToList();
 
             var model = new ClientDisplayServices
             {
@@ -49,7 +49,7 @@ namespace ServiceElectronicQueue.Controllers
 
             _httpContextAccessor.HttpContext!.Session.SetString(
                 "ClientRecordToQueue", JsonSerializer.Serialize(brOffice.IdBranchOffice));
-                
+            
             return View(model);
         }
 
@@ -59,34 +59,42 @@ namespace ServiceElectronicQueue.Controllers
                 .GetString("ClientRecordToQueue")!);
             _httpContextAccessor.HttpContext.Session.Clear();
 
-            string service = _unitOfWork.ServicesRep.GetAll()
-                .Where(s => s.IdBranchOffice == idBrOffice && s.NumberService == numberService)
-                .Select(s => s.Service).First();
+            ServiceSector? serviceSector = _unitOfWork.ServicesRep.GetAll()
+                .FirstOrDefault(s => s.NumberService == numberService && s.IdBranchOffice == idBrOffice);
+
+            if (serviceSector != null)
+            {
+                var producer = new ProducerQueueService(KafkaFactory.CreateProducer(
+                    new ConfigProducer(JsonSerializer.Serialize(idBrOffice))), ConfigKafka.Topic); 
             
-            var producer = new ProducerQueueService(KafkaFactory.CreateProducer(
-                new ConfigProducer(JsonSerializer.Serialize(idBrOffice))), ConfigKafka.Topic); 
-            producer.PostMessage(
-                JsonSerializer.Serialize(new KafkaQuery(Rand.Str(2), numberService, service)));
-            return RedirectToAction("DisplayQueue", new {});
+                producer.PostMessage(JsonSerializer.Serialize(new KafkaQuery(
+                    Rand.Str(2), numberService, serviceSector.Service)));
+            
+            
+            
+                var serviceClientUrl = JsonSerializer.Serialize(
+                    new ServiceDisplayQueueUrl{IdBrOffice = idBrOffice, NumberService = numberService});
+                return RedirectToAction("DisplayQueue", new { serviceClientUrl});
+            }
+
+            Guid BrOffCli = idBrOffice;
+            return RedirectToAction("ClientServiceDisplay", new { BrOffCli });
         }
         
         
-        
-        public IActionResult DisplayQueue()
+        public IActionResult DisplayQueue(string serviceClientUrl)
         {
-            
             return NoContent();
         }
 
 
 
-        public IActionResult GetUrlLink(string idBrOffice)
+        /*public IActionResult GetUrlLink(string idBrOffice)
         {
-            
             string url = 
-                $"https://{Request.Host}{Request.PathBase}/ClBrOffIntController/ClientServiceDisplay?{idBrOffice}";
+                $"https://{Request.Host}{Request.PathBase}/ClBrOffIntController/ClientServiceDisplay?idBrOffice: {idBrOffice}";
             return RedirectToAction();
-        }
+        }*/
         
         protected override void Dispose(bool disposing)
         {
