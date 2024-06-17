@@ -134,3 +134,7 @@ C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\D
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ServiceElectronicQueue.pdb
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ServiceElectronicQueue.genruntimeconfig.cache
 C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\obj\Debug\net8.0\ref\ServiceElectronicQueue.dll
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\System.Net.WebSockets.WebSocketProtocol.dll
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\Elasticsearch.Net.dll
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\Nest.dll
+C:\Users\artem\RiderProjects\ServiceElectronicQueue\ServiceElectronicQueue\bin\Debug\net8.0\Nest.JsonNetSerializer.dll

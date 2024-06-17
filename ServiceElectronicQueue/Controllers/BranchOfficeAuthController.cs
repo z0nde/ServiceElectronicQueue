@@ -58,9 +58,9 @@ namespace ServiceElectronicQueue.Controllers
                     
                     _branchOffice.SetProperties(
                         Guid.NewGuid(),
+                        branchOfficeRegisterForView.Addres!,
                         branchOfficeRegisterForView.Email!,
                         branchOfficeRegisterForView.Password!,
-                        branchOfficeRegisterForView.Addres!,
                         null,
                         (Guid)orgId
                     );

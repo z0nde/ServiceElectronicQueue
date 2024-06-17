@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ServiceElectronicQueue.ControllersContainers.ParserTransmittingData.WithBranchOffice;
 using ServiceElectronicQueue.ManagersData;
@@ -12,56 +14,81 @@ namespace ServiceElectronicQueue.Controllers;
 
 public class ServicesController : Controller
 {
+    private readonly JsonSerializerOptions _options;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly UnitOfWorkCompany _unitOfWork;
     private readonly ServiceManager _serviceManager;
-        
+    private User _user;
+    private BranchOffice _branchOffice;
+
     public ServicesController(CompanyDbContext db, IHttpContextAccessor httpContextAccessor)
     {
+        _options = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            WriteIndented = true
+        };
         _httpContextAccessor = httpContextAccessor;
         _unitOfWork = new UnitOfWorkCompany(db);
         _serviceManager = new ServiceManager(_unitOfWork);
+        _user = new User();
+        _branchOffice = new BranchOffice();
     }
-    
+
     public IActionResult ServicesDisplay(string jsonUserUrl, string jsonBrOfficeUrl)
     {
         var containerWithBranchOffice = new ParserTransmittingGetDataContainerWithBranchOffice(_httpContextAccessor);
-        (DataComeFrom userAuthStatus, User user, BranchOffice branchOffice) = containerWithBranchOffice.ParseDeserialize(jsonUserUrl, jsonBrOfficeUrl);
-        
+        (DataComeFrom userAuthStatus, User user, BranchOffice branchOffice) =
+            containerWithBranchOffice.ParseDeserialize(jsonUserUrl, jsonBrOfficeUrl);
+
         var services = _unitOfWork.ServicesRep.GetAll();
         var model = services
-            .Select(service => new ServicesFormForView 
+            .Select(service => new ServicesFormForView
                 { NumberService = service.NumberService, Service = service.Service })
             .ToList();
-        
+
         containerWithBranchOffice.ParseSerialize(userAuthStatus, user, branchOffice);
-        
+
         return View(model);
     }
-    
+
+    [HttpPost]
+    public IActionResult GoToCreateService()
+    {
+        return RedirectToAction("CreateService");
+    }
+
     [HttpGet]
     public IActionResult CreateService()
     {
         return View();
     }
-    
+
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult CreateService(ServicesFormForView service)
+    public IActionResult CreateService(ServicesFormForView servicesFormForView)
     {
         if (ModelState.IsValid)
         {
-            if (_serviceManager.CheckModel(service) != null && service.NumberService != null)
+            var containerWithBranchOffice =
+                new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+            (DataComeFrom userAuthStatus, _user, _branchOffice) = containerWithBranchOffice.ParseDeserialize();
+
+            if (_serviceManager.CheckModel(servicesFormForView) != null)
             {
+                Guid idBrOffice = _branchOffice.IdBranchOffice;
                 _unitOfWork.ServicesRep.Create(new ServiceSector(
-                    Guid.NewGuid(), (int)service.NumberService, service.Service!, new Guid(/*подтянуть сюда http сессии*/)));
+                    Guid.NewGuid(), (int)servicesFormForView.NumberService!, servicesFormForView.Service!, idBrOffice));
                 _unitOfWork.Save();
-                return RedirectToAction(nameof(ServicesDisplay));
+
+                (string jsonUserUrl, string jsonBrOfficeUrl) =
+                    containerWithBranchOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+                return RedirectToAction("ServicesDisplay", new { jsonUserUrl, jsonBrOfficeUrl });
             }
         }
-        return View(service);
+
+        return View();
     }
-    
+
     [HttpGet]
     public IActionResult UpdateService(int numberService)
     {
@@ -71,30 +98,26 @@ public class ServicesController : Controller
         {
             return NotFound();
         }
-        return View(new ServicesFormForView{NumberService = service.NumberService, Service = service.Service});
+
+        return View(new ServicesFormForView { NumberService = service.NumberService, Service = service.Service });
     }
 
-    
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult UpdateService(int numberService, ServicesFormForView service)
+    public IActionResult UpdateService(int numberService, string service)
     {
-        if (numberService != service.NumberService)
-        {
-            return NotFound();
-        }
-
+        var containerWithBranchOffice = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+        (DataComeFrom userAuthStatus, _user, _branchOffice) = containerWithBranchOffice.ParseDeserialize();
         if (ModelState.IsValid)
         {
             try
             {
-                if (_serviceManager.CheckModel(service) != null)
-                {
-                    var serviceSector = _unitOfWork.ServicesRep.GetAll()
-                        .FirstOrDefault(s => s.NumberService == service.NumberService);
-                    _unitOfWork.ServicesRep.Update(serviceSector.IdServices, serviceSector);
-                    _unitOfWork.Save();
-                }
+                var serviceSector = _unitOfWork.ServicesRep.GetAll()
+                    .FirstOrDefault(s => s.NumberService == numberService);
+                serviceSector.Service = service;
+                _unitOfWork.ServicesRep.Update(serviceSector.IdServices, serviceSector);
+                _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -103,45 +126,52 @@ public class ServicesController : Controller
                 {
                     return NotFound();
                 }
+
                 throw;
             }
-            return RedirectToAction(nameof(ServicesDisplay));
+
+            (string jsonUserUrl, string jsonBrOfficeUrl) =
+                containerWithBranchOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+            return RedirectToAction("ServicesDisplay", new { jsonUserUrl, jsonBrOfficeUrl });
         }
+
         return View(service);
     }
 
     [HttpGet]
-    public IActionResult DeleteService(int number)
+    public IActionResult DeleteService(int numberService)
     {
-        var service = _unitOfWork.ServicesRep.GetAll().FirstOrDefault(s => s.NumberService == number);
-        
+        var containerWithBranchOffice = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+        (DataComeFrom userAuthStatus, _user, _branchOffice) = containerWithBranchOffice.ParseDeserialize();
+
+
+        var service = _unitOfWork.ServicesRep.GetAll().FirstOrDefault(s => s.NumberService == numberService);
+
         if (service == null)
         {
             return NotFound();
         }
-        return View(new ServicesFormForView{ NumberService = service.NumberService, Service = service.Service});
-    }
-    
-    [HttpPost, ActionName("DeleteService")]
-    [ValidateAntiForgeryToken]
-    public IActionResult ConfirmDeletionService(int number)
-    {
-        var service = _unitOfWork.ServicesRep.GetAll().FirstOrDefault(s => s.NumberService == number);
+
         _unitOfWork.ServicesRep.Delete(_unitOfWork.ServicesRep.GetAll()
             .Where(s => service != null && s.NumberService == service.NumberService)
             .Select(s => s.IdServices).FirstOrDefault());
         _unitOfWork.Save();
-        return RedirectToAction(nameof(ServicesDisplay));
+
+        (string jsonUserUrl, string jsonBrOfficeUrl) =
+            containerWithBranchOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+        return RedirectToAction("ServicesDisplay", new { jsonUserUrl, jsonBrOfficeUrl });
     }
 
     [HttpPost]
     public IActionResult ExitToBranchOfficeAccount()
     {
         var containerWithBranchOffice = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
-        (DataComeFrom userAuthStatus, User user, BranchOffice branchOffice) = containerWithBranchOffice.ParseDeserialize();
+        (DataComeFrom userAuthStatus, User user, BranchOffice branchOffice) =
+            containerWithBranchOffice.ParseDeserialize();
 
-        (string jsonUserUrl, string jsonBrOfficeUrl) = containerWithBranchOffice.ParseSerialize(userAuthStatus, user, branchOffice);
-        return RedirectToAction("BranchOfficeAccount", "BranchOfficeAccount", new {jsonUserUrl, jsonBrOfficeUrl});
+        (string jsonUserUrl, string jsonBrOfficeUrl) =
+            containerWithBranchOffice.ParseSerialize(userAuthStatus, user, branchOffice);
+        return RedirectToAction("BranchOfficeAccount", "BranchOfficeAccount", new { jsonUserUrl, jsonBrOfficeUrl });
     }
 
     protected override void Dispose(bool disposing)

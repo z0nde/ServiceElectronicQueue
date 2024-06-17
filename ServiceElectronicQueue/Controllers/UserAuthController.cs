@@ -24,6 +24,11 @@ namespace ServiceElectronicQueue.Controllers
             _userManager = new UserManager(_unitOfWork);
             //_organizationManager = new OrganizationManager(_unitOfWork);
             _user = new User();
+
+            if (_unitOfWork.RoleRep.GetAll().FirstOrDefault() == null)
+            {
+                ValidationRoles();
+            }
         }
 
 
@@ -133,10 +138,8 @@ namespace ServiceElectronicQueue.Controllers
             _unitOfWork.Dispose();
             base.Dispose(disposing);
         }
-
-
-        /*[HttpPost]
-        public IActionResult ValidationRoles()
+        
+        public void ValidationRoles()
         {
             Role role1 = new Role("Пользователь организации");
             Role role2 = new Role("Пользователь филиала");
@@ -145,7 +148,6 @@ namespace ServiceElectronicQueue.Controllers
             _unitOfWork.RoleRep.Create(role2);
             _unitOfWork.Save();
             _unitOfWork.Dispose();
-            return Ok();
-        }*/
+        }
     }
 }

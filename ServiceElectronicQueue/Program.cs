@@ -2,7 +2,9 @@ using Confluent.Kafka;
 using Microsoft.AspNetCore.Components.Forms.Mapping;
 using Microsoft.EntityFrameworkCore;
 using ServiceElectronicQueue.Models.DataBaseCompany;
-using ServiceElectronicQueue.Models.KafkaQueue;
+using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
+using ServiceElectronicQueue.Models.KafkaQueue;/*
+using ServiceElectronicQueue.Models.KafkaQueue.SignalrKafka;*/
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,7 @@ string connectionString = builder.Configuration.GetConnectionString("ConnectionC
 builder.Services.AddDbContext<CompanyDbContext>(optionsAction => 
     optionsAction.UseNpgsql(connectionString));
 
+/*builder.Services.AddSignalR();*/
 
 // Добавление сессий в сервисы
 builder.Services.AddSession();
@@ -36,6 +39,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+/*app.MapHub<KafkaMessageHub>("/KafkaMessageHubBrOffice");*/
 
 app.UseRouting();
 

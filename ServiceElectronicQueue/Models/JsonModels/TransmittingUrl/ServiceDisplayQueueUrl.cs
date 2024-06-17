@@ -3,5 +3,6 @@
 public class ServiceDisplayQueueUrl
 {
     public Guid IdBrOffice { get; set; }
-    public int NumberService { get; set; }
+    public string NumberQueue { get; set; }
+    public string Status { get; set; }
 }

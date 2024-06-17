@@ -1,20 +1,19 @@
 ﻿@model ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesFormForView
 
+@{
+    ViewData["Title"] = "Редактирование сервисов";
+}
+
 <h2>Редактирование сервиса</h2>
 
 <form asp-action="UpdateService" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="NumberService" />
     <div class="form-group">
-        <label asp-for="NumberService" class="control-label">Номер сервиса</label>
-        <input asp-for="NumberService" class="form-control" />
-        <span asp-validation-for="NumberService" class="text-danger"></span>
-    </div>
-    <div class="form-group">
         <label asp-for="Service" class="control-label">Сервис</label>
         <input asp-for="Service" class="form-control" />
         <span asp-validation-for="Service" class="text-danger"></span>
-    </div>
+    </div><br/>
     <div class="form-group">
         <input type="submit" value="Сохранить" class="btn btn-primary" />
     </div>

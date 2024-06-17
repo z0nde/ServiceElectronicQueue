@@ -1,0 +1,21 @@
+﻿@model ServiceElectronicQueue.Models.JsonModels.TransmittingUrl.ServiceDisplayQueueUrl
+
+<div style="text-align: center">
+    <h2>Ваш номер: @Model.NumberQueue</h2>
+    @if (Model.Status == QueueStatusStatic.Status[0])
+    {
+        <h3>Ожидайте</h3>
+    }
+    @if (Model.Status == QueueStatusStatic.Status[1])
+    {
+        <h3>Ваш номер готов к обслуживанию</h3>
+    }
+    @if (Model.Status == QueueStatusStatic.Status[2])
+    {
+        <h3>В обслуживании</h3>
+    }
+    @if (Model.Status == QueueStatusStatic.Status[3])
+    {
+        <h3>Обслуживание закончено, хорошего дня!</h3>
+    }
+</div>

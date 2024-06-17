@@ -17,6 +17,7 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany
         public CompanyDbContext(DbContextOptions<CompanyDbContext> dbContextOptions) : base(dbContextOptions)
         {
             //Database.EnsureCreated();
+            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
     }
 }

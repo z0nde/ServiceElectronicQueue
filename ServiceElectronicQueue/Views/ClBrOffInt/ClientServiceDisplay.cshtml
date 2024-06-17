@@ -1,11 +1,16 @@
 ﻿@model ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesAndElectronicQueue.ClientDisplayServices
 
+@{
+    ViewData["Title"] = "Запись в очередь";
+}
+
 <h2>Организация: @Model.Organization</h2>
 <h3>Адрес филиала: @Model.BranchOfficeAddres</h3>
 
 <table class="table">
     <thead>
     <tr>
+        <th>Номер</th>
         <th>Сервис / услуга</th>
     </tr>
     </thead>
@@ -16,7 +21,7 @@
             <td>@Html.DisplayFor(modelItem => item.NumberService)</td>
             <td>@Html.DisplayFor(modelItem => item.Service)</td>
             <td>
-                <a asp-action="RecordToQueue" asp-route-id="@item.NumberService">Записаться в очередь</a>
+                <a asp-action="RecordToQueue" asp-route-numberService="@item.NumberService" class="btn btn-primary">Записаться в очередь</a>
             </td>
         </tr>
     }

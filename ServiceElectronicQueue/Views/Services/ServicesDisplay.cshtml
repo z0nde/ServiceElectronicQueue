@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesFormForView>
 
+@{
+    ViewData["Title"] = "Редактирование сервисов";
+}
+
 <h2>Менеджер сервисов</h2>
 
 <table class="table">
@@ -10,18 +14,28 @@
         <th>Действия</th>
     </tr>
     </thead>
+    <div style="text-align: right">
+        <form asp-controller="Services" asp-action="CreateService" method="get">
+            <button type="submit" class="btn btn-primary">Добавить сервис</button>
+        </form><br/>
+    </div>
+
     <tbody>
-    @foreach (var item in Model)
+    @foreach (var servicesFormForView in Model)
     {
         <tr>
-            <td>@Html.DisplayFor(modelItem => item.NumberService)</td>
-            <td>@Html.DisplayFor(modelItem => item.Service)</td>
+            <td>@Html.DisplayFor(modelItem => servicesFormForView.NumberService)</td>
+            <td>@Html.DisplayFor(modelItem => servicesFormForView.Service)</td>
             <td>
-                <a asp-action="CreateService" asp-route-id="@item.NumberService">Добавить</a>
-                <a asp-action="UpdateService" asp-route-id="@item.NumberService">Изменить</a> |
-                <a asp-action="DeleteService" asp-route-id="@item.NumberService">Удалить</a>
+                <a asp-controller="Services" asp-action="UpdateService" asp-route-numberService="@servicesFormForView.NumberService" class="btn btn-primary">Изменить</a>
+                <a asp-controller="Services" asp-action="DeleteService" asp-route-numberService="@servicesFormForView.NumberService" class="btn btn-primary">Удалить</a>
             </td>
         </tr>
     }
     </tbody>
 </table>
+<div style="text-align: right">
+    <form asp-controller="Services" asp-action="ExitToBranchOfficeAccount" method="post">
+        <button type="submit" class="btn btn-primary">Вернуться в личный кабинет</button>
+    </form><br/>
+</div>

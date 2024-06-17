@@ -30,7 +30,6 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
         {
             var unitOfWork = new UnitOfWorkCompany(_db);
             var oldService = unitOfWork.ServicesRep.GetByIndex(id);
-            oldService.NumberService = newItem.NumberService;
             oldService.Service = newItem.Service;
         }
 

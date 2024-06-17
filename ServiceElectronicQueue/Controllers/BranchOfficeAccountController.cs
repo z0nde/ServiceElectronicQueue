@@ -57,8 +57,9 @@ namespace ServiceElectronicQueue.Controllers
             var containerWithBranchOffice = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
             (DataComeFrom userAuthStatus, _user, _branchOffice) = containerWithBranchOffice.ParseDeserialize();
 
-            var idBrOffice = _branchOffice.IdBranchOffice;
-            return RedirectToAction("ServicesDisplay", "Services", new {idBrOffice});
+            (string jsonUserUrl, string jsonBrOfficeUrl) = containerWithBranchOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+            return RedirectToAction("ServicesDisplay", "Services", new 
+                {jsonUserUrl, jsonBrOfficeUrl});
         }
 
         [HttpPost]
@@ -69,12 +70,13 @@ namespace ServiceElectronicQueue.Controllers
 
             Guid idBrOffice = _branchOffice.IdBranchOffice;
             
-            _branchOffice.UniqueLink = $"https://{Request.Host}{Request.PathBase}/ClBrOffIntController/ClientServiceDisplay?BrOffCli=\"{idBrOffice}\"";
+            _branchOffice.UniqueLink = 
+                $"https://{Request.Host}{Request.PathBase}/ClBrOffInt/ClientServiceDisplay?BrOffCli={idBrOffice}";
             _unitOfWork.BranchesRep.Update(_branchOffice.IdBranchOffice, _branchOffice);
             _unitOfWork.Save();
 
             (string jsonUserUrl, string jsonBrOfficeUrl) = container.ParseSerialize(userAuthStatus, _user, _branchOffice);
-            
+
             return RedirectToAction("BranchOfficeAccount", "BranchOfficeAccount", new 
                 {jsonUserUrl, jsonBrOfficeUrl});
         }
@@ -84,52 +86,11 @@ namespace ServiceElectronicQueue.Controllers
         {
             var container = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
             (DataComeFrom userAuthStatus, _user, _branchOffice) = container.ParseDeserialize();
-            
-            
-            (string jsonUserUrl, string jsonBrOfficeUrl) = container.ParseSerialize(userAuthStatus, _user, _branchOffice);
-            return RedirectToAction("ElectronicQueueClients", new {jsonUserUrl, jsonBrOfficeUrl});
+
+            var parserTransmittingGetDataContainerWithBranchOffice = new ParserTransmittingGetDataContainerWithBranchOffice(_httpContextAccessor);
+            parserTransmittingGetDataContainerWithBranchOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+            return RedirectToAction("ElectronicQueueClients", "HubMessageBranchOffice");
         }
-        
-        
-        
-        [HttpGet]
-        public IActionResult ElectronicQueueClients(string jsonUserUrl, string jsonBrOfficeUrl)
-        {
-            var containerWithBranchOffice = new ParserTransmittingGetDataContainerWithBranchOffice(_httpContextAccessor);
-            (DataComeFrom userAuthStatus, _user, _branchOffice) = containerWithBranchOffice.ParseDeserialize(jsonUserUrl, jsonBrOfficeUrl);
-            var idBrOffice = _branchOffice.IdBranchOffice;
-            
-            StatusesPages.CurrentPage = 1;
-            var configConsumer = new ConfigConsumer(JsonSerializer.Serialize(_branchOffice.IdBranchOffice));
-            var consumer = KafkaFactory.CreateConsumer(configConsumer);
-            var consumerQueueService = new ConsumerQueueService(consumer, ConfigKafka.Topic);
-            
-            
-            //todo "стереть. использовать SignalR и JS, данная реализация не работает ввиду того, что в фоновом потоке нет HTTP";
-            
-            
-            List<KafkaQuery> kafkaqueries = new();
-            if (StatusesPages.FlagKafkaPage)
-            {
-                Task.Run(() =>
-                {
-                    consumer.Subscribe(ConfigKafka.Topic);
-                    while (StatusesPages.CurrentPage == 1)
-                    {
-                        string? message = consumerQueueService.GetMessage();
-                        if (message != null)
-                            kafkaqueries.Add(JsonSerializer.Deserialize<KafkaQuery>(message)!);
-                    }
-                    StatusesPages.FlagKafkaPage = false;
-                    Thread.Sleep(5000);
-                    return RedirectToAction("ElectronicQueueClients", new {idBrOffice});
-                });
-            }
-            if (StatusesPages.FlagKafkaPage == false)
-                StatusesPages.FlagKafkaPage = true;
-            return View(kafkaqueries);
-        }
-        
 
         protected override void Dispose(bool disposing)
         {

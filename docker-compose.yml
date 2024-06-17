@@ -57,3 +57,11 @@
       - 8082:8080
     environment:
       DYNAMIC_CONFIG_ENABLED: true
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+    ports:
+      - 9200:9200

@@ -1,5 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Runtime.InteropServices.JavaScript;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ServiceElectronicQueue.Models.DataBaseCompany;
 using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement;
@@ -7,6 +8,7 @@ using ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesAndE
 using ServiceElectronicQueue.Models.JsonModels;
 using ServiceElectronicQueue.Models.JsonModels.TransmittingUrl;
 using ServiceElectronicQueue.Models.KafkaQueue;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ServiceElectronicQueue.Controllers
 {
@@ -25,11 +27,11 @@ namespace ServiceElectronicQueue.Controllers
         /// Генерируемая ссылка. В метод передаётся guid филиала, далее по филиалу ищется всё информация и записывается
         /// в модель, после чего, отображается в представлении
         /// </summary>
-        /// <param name="guidBrOffice"></param>
+        /// <param name="BrOffCli"></param>
         /// <returns></returns>
+        [HttpGet]
         public IActionResult ClientServiceDisplay(Guid BrOffCli)
         {
-            //todo "сделать проверки";
             var brOffice = _unitOfWork.BranchesRep.GetAll()
                 .FirstOrDefault(s => s.IdBranchOffice == BrOffCli);
             var org = _unitOfWork.OrganizationsRep.GetAll()
@@ -53,6 +55,7 @@ namespace ServiceElectronicQueue.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public IActionResult RecordToQueue(int numberService)
         {
             Guid idBrOffice = JsonSerializer.Deserialize<Guid>(_httpContextAccessor.HttpContext!.Session
@@ -64,16 +67,32 @@ namespace ServiceElectronicQueue.Controllers
 
             if (serviceSector != null)
             {
-                var producer = new ProducerQueueService(KafkaFactory.CreateProducer(
-                    new ConfigProducer(JsonSerializer.Serialize(idBrOffice))), ConfigKafka.Topic); 
-            
-                producer.PostMessage(JsonSerializer.Serialize(new KafkaQuery(
-                    Rand.Str(2), numberService, serviceSector.Service)));
-            
-            
+                var producer = new ProducerQueueService(KafkaFactory.CreateProducer(), ConfigKafka.Topic);
+                var numberQueue = Rand.Str(2);
+                Guid idElectronicQueue = Guid.NewGuid();
+                string uniqueKeyKafka = JsonConvert.SerializeObject(new KafkaKey
+                    {IdBranchOfficeKafka = idBrOffice, IdQueueKafka = idElectronicQueue});
+                producer.PostMessage(JsonConvert.SerializeObject(new KafkaMessageClientToBranchOffice(
+                    idElectronicQueue, numberQueue, numberService, serviceSector.Service)), uniqueKeyKafka);
+
+                var brOffice = _unitOfWork.BranchesRep.GetByIndex(idBrOffice);
+                var service = _unitOfWork.ServicesRep.GetAll()
+                    .FirstOrDefault(s => s.IdBranchOffice == brOffice.IdBranchOffice);
+                
+                DateTime dateTime = DateTime.UtcNow;
+                ElectronicQueue electronicQueue = new ElectronicQueue
+                {
+                    IdElectronicQueue = idElectronicQueue,
+                    NumberInQueue = numberQueue,
+                    Status = QueueStatusStatic.Status[0],
+                    DateAndTimeStatus = dateTime,
+                    IdServices = service.IdServices
+                };
+                _unitOfWork.ElectronicQueueRep.Create(electronicQueue);
+                _unitOfWork.Save();
             
                 var serviceClientUrl = JsonSerializer.Serialize(
-                    new ServiceDisplayQueueUrl{IdBrOffice = idBrOffice, NumberService = numberService});
+                    new ServiceDisplayQueueUrl{IdBrOffice = idBrOffice, NumberQueue = numberQueue, Status = QueueStatusStatic.Status[0]});
                 return RedirectToAction("DisplayQueue", new { serviceClientUrl});
             }
 
@@ -82,19 +101,16 @@ namespace ServiceElectronicQueue.Controllers
         }
         
         
+        
         public IActionResult DisplayQueue(string serviceClientUrl)
         {
-            return NoContent();
+            ServiceDisplayQueueUrl serviceDisplayQueueUrl =
+                JsonSerializer.Deserialize<ServiceDisplayQueueUrl>(serviceClientUrl)!;
+            
+            return View();
         }
-
-
-
-        /*public IActionResult GetUrlLink(string idBrOffice)
-        {
-            string url = 
-                $"https://{Request.Host}{Request.PathBase}/ClBrOffIntController/ClientServiceDisplay?idBrOffice: {idBrOffice}";
-            return RedirectToAction();
-        }*/
+        
+        
         
         protected override void Dispose(bool disposing)
         {

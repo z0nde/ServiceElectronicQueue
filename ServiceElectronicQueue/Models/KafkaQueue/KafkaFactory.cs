@@ -4,18 +4,18 @@ namespace ServiceElectronicQueue.Models.KafkaQueue;
 
 public class KafkaFactory
 {
-    public static IProducer<Null, string> CreateProducer(ConfigProducer producer)
+    public static IProducer<string, string> CreateProducer()
     {
         var producerConfig = new ProducerConfig
         {
             BootstrapServers = ConfigKafka.BootstrapServers,
-            ClientId = producer.ClientId,
-            EnableIdempotence = true
+            EnableIdempotence = true,
+            Partitioner = Partitioner.Murmur2
         };
-        return new ProducerBuilder<Null, string>(producerConfig).Build();
+        return new ProducerBuilder<string, string>(producerConfig).Build();
     }
 
-    public static IConsumer<Null, string> CreateConsumer(ConfigConsumer consumer)
+    public static IConsumer<string, string> CreateConsumer(ConfigConsumer consumer)
     {
         var consumerConfig = new ConsumerConfig
         {
@@ -23,6 +23,6 @@ public class KafkaFactory
             GroupId = consumer.GroupId,
             AutoOffsetReset = AutoOffsetReset.Earliest
         };
-        return new ConsumerBuilder<Null, string>(consumerConfig).Build();
+        return new ConsumerBuilder<string, string>(consumerConfig).Build();
     }
 }
