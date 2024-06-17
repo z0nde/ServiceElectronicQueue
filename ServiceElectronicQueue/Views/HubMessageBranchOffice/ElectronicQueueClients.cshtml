@@ -1,0 +1,53 @@
+﻿@*
+@using Microsoft.AspNetCore.SignalR.Client
+*@
+
+@{
+    Layout = "_Layout";
+}
+
+
+<div id="messages">
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <div class="message">
+                <div>Номер в очереди: @item.NumberQueue</div>
+                <div>Номер сервиса: @item.NumberService</div>
+                <div>Сервис: @item.Service</div>
+                <a href="/BranchOfficeAccountController/ClientStartService/@item.NumberQueue" class="btn btn-primary">Начать обслуживание</a>
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/signalr.js"></script>
+    <script>
+        $(document).ready(function () {
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl("/messageHub")
+                .build();
+
+            connection.on("ReceiveMessage", function (message) {
+                $("#messages").append(
+                    '<div class="message">' +
+                    '<div class="content">' + message.Content + '</div>' +
+                    '<a href="/BranchOfficeAccount/ElectronicQueueClients/' + message.Id + '" class="btn btn-primary">Подробнее</a>' +
+                    '</div>'
+                );
+            });
+
+            connection.start()
+                .then(function () {
+                    setInterval(function () {
+                        connection.invoke("GetMessages"); 
+                    }, 5000);
+                })
+                .catch(function (err) {
+                    return console.error(err.toString());
+                });
+        });
+    </script>
+}
