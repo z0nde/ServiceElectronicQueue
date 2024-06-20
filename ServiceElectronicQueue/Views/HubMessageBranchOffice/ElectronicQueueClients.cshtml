@@ -1,124 +1,37 @@
-﻿@*<head>
-    <title>Мониторинг Клиентов</title>
-</head>
-<body>
-    <div id="clients-list">
-        <h2>Список Клиентов</h2>
-        <ul></ul>
-    </div>
-
-    <script>
-        function updateClientsList() {
-            fetch('/HubMessageBranchOfficeController/GetAllClients')
-                .then(response => response.json())
-                .then(clients => {
-                    var clientsList = document.getElementById("clients-list").querySelector("ul");
-                    clientsList.innerHTML = ''; // Очищаем список
-                    clients.forEach(client => {
-                        var listItem = document.createElement("li");
-                        listItem.textContent = `Номер очереди: ${client.NumberQueue}, Номер сервиса: ${client.NumberService}, Сервис: ${client.Service}`;
-                        clientsList.appendChild(listItem);
-                    });
-                })
-                .catch(error => console.error('Ошибка:', error));
-        }
-
-        // Запускаем обновление списка каждые 5 секунд
-        setInterval(updateClientsList, 5000);
-    </script>
-</body>*@
-
-@*<script>
-function updateClientsList() {
-    fetch('/HubMessageBranchOfficeController/ElectronicQueueClients')
-        .then(response => response.json())
-        .then(clients => {
-            var clientsList = document.getElementById("clients-list").querySelector("ul");
-            clientsList.innerHTML = ''; // Очищаем список
-
-            clients.forEach(client => {
-                // Создаем элемент списка
-                var listItem = document.createElement("li");
-                listItem.textContent = `Номер очереди: ${client.NumberQueue}, Номер сервиса: ${client.NumberService}, Сервис: ${client.Service}`;
-                listItem.dataset.clientId = client.ClientId; // Добавляем атрибут data-client-id
-
-                // Создаем кнопку   
-                var button = document.createElement("button");
-                button.textContent = "Действие";
-                button.addEventListener('click', function () {
-                    // Получение ClientId из атрибута data-client-id
-                    var clientId = this.parentElement.dataset.clientId;
-                    // Вызов метода контроллера с ClientId
-                    StartService(clientId);
-                });
-
-                // Добавляем элемент списка в список
-                clientsList.appendChild(listItem);
-                
-                // Добавляем кнопку в элемент списка
-                listItem.appendChild(button);
-            });
-        })
-        .catch(error => console.error('Ошибка:', error));
-}
-
-// Запускаем обновление списка каждые 5 секунд
-setInterval(updateClientsList, 5000);
-
-// Функция для отправки AJAX-запроса к методу контроллера
-function StartService(clientId) {
-    fetch(`/HubMessageBranchOfficeController/StartService?clientId=${clientId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            // Обработка успешного ответа
-            console.log(`Действие выполнено для клиента ${clientId}`);
-        } else {
-            // Обработка ошибки
-            console.error(`Ошибка выполнения действия для клиента ${clientId}`);
-        }
-    })
-    .catch(error => {
-        // Обработка ошибки
-        console.error(`Ошибка AJAX-запроса: ${error}`);
-    });
-}
-</script>*@
-
-@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<ServiceElectronicQueue.Models.KafkaQueue.KafkaMessageClientToBranchOffice>
 @{
     ViewData["Title"] = "Обслуживание клиентов";
 }
 
 <h2>Обслуживание клиентов</h2>
-
+<div style="text-align: right">
+    <form asp-controller="HubMessageBranchOffice" asp-action="ExitToBranchOfficeAccount" method="get">
+        <button type="submit" class="btn btn-primary">Выход в аккаунт филиала</button>
+    </form><br/>
+</div>
 <div id="services-table">
     <table class="table">
         <thead>
-            <tr>
-                <th>Номер очереди</th>
-                <th>Номер сервиса</th>
-                <th>Сервис</th>
-                <th>Действие</th>
-            </tr>
+        <tr>
+            <th>Номер очереди</th>
+            <th>Номер сервиса</th>
+            <th>Сервис</th>
+            <th>Действие</th>
+        </tr>
         </thead>
         <tbody id="queues-tbody">
-            @foreach (var kafkaMessageClientToBranchOffice in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => kafkaMessageClientToBranchOffice.NumberQueue)</td>
-                    <td>@Html.DisplayFor(modelItem => kafkaMessageClientToBranchOffice.NumberService)</td>
-                    <td>@Html.DisplayFor(modelItem => kafkaMessageClientToBranchOffice.Service)</td>
-                    <td>
-                        <a asp-controller="HubMessageBranchOffice" asp-action="StartService" asp-route-numberQueue="@kafkaMessageClientToBranchOffice.NumberQueue" class="btn btn-primary">Начать обслуживание</a>
-                    </td>
-                </tr>
-            }
+        @foreach (var kafkaMessageClientToBranchOffice in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => kafkaMessageClientToBranchOffice.NumberQueue)</td>
+                <td>@Html.DisplayFor(modelItem => kafkaMessageClientToBranchOffice.NumberService)</td>
+                <td>@Html.DisplayFor(modelItem => kafkaMessageClientToBranchOffice.Service)</td>
+                <td>
+                    <a asp-controller="HubMessageBranchOffice" asp-action="ReadyMaintenance" asp-route-numberQueue="@kafkaMessageClientToBranchOffice.NumberQueue" class="btn btn-primary">Начать обслуживание</a>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 </div>
@@ -127,11 +40,11 @@ function StartService(clientId) {
     function updateServicesTable() {
         fetch('/HubMessageBranchOffice/ElectronicQueueClientsForAjax/')
             .then(response => response.json())
-            .then(queue => {
+            .then(queues => {
                 var queueTbody = document.getElementById("queues-tbody");
-                queueTbody.innerHTML = ''; // Очистка таблицы
+                //queueTbody.innerHTML = ''; // Очистка таблицы
 
-                queue.forEach(queue => {
+                queues.forEach(queue => {
                     // Создание строки таблицы
                     var row = document.createElement('tr');
 
@@ -147,7 +60,7 @@ function StartService(clientId) {
                     // Добавление кнопки
                     var actionsCell = document.createElement('td');
                     var startService = document.createElement('a');
-                    startService.href = `/HubMessageBranchOffice/StartService?numberQueue=${queue.NumberQueue}`;
+                    startService.href = `/HubMessageBranchOffice/ReadyMaintenance?numberQueue=${queue.NumberQueue}`;
                     startService.textContent = 'Начать обслуживание';
                     startService.classList.add('btn', 'btn-primary');
                     actionsCell.appendChild(startService);
@@ -166,5 +79,5 @@ function StartService(clientId) {
     }
 
     // Вызов функции обновления списка каждые 5 секунд
-    setInterval(updateServicesTable, 5000); 
+    setInterval(updateServicesTable, 10000); 
 </script>

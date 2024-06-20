@@ -92,6 +92,40 @@ namespace ServiceElectronicQueue.Controllers
             return RedirectToAction("ElectronicQueueClients", "HubMessageBranchOffice");
         }
 
+        [HttpPost]
+        public IActionResult GoToStatistic()
+        {
+            var containerWithBranchOffice = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+            (DataComeFrom userAuthStatus, _user, _branchOffice) = containerWithBranchOffice.ParseDeserialize();
+
+            (string jsonUserUrl, string jsonBrOfficeUrl) = containerWithBranchOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+            return RedirectToAction("Statistic", new 
+                {jsonUserUrl, jsonBrOfficeUrl});
+        }
+
+        [HttpGet]
+        public IActionResult Statistic(string jsonUserUrl, string jsonBrOfficeUrl)
+        {
+            var containerWithBranchOffice = new ParserTransmittingGetDataContainerWithBranchOffice(_httpContextAccessor);
+            (DataComeFrom userAuthStatus, _user, _branchOffice) = containerWithBranchOffice.ParseDeserialize(jsonUserUrl, jsonBrOfficeUrl);
+
+            
+            
+            containerWithBranchOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GoToAccount()
+        {
+            var containerWithBranchOffice = new ParserTransmittingPostDataContainerWithBranchOffice(_httpContextAccessor);
+            (DataComeFrom userAuthStatus, _user, _branchOffice) = containerWithBranchOffice.ParseDeserialize();
+
+            (string jsonUserUrl, string jsonBrOfficeUrl) = containerWithBranchOffice.ParseSerialize(userAuthStatus, _user, _branchOffice);
+            return RedirectToAction("Statistic", new 
+                {jsonUserUrl, jsonBrOfficeUrl});
+        }
+
         protected override void Dispose(bool disposing)
         {
             _unitOfWork.Dispose();

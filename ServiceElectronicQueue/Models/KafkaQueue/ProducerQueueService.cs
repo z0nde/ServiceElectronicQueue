@@ -14,12 +14,12 @@ namespace ServiceElectronicQueue.Models.KafkaQueue
             _topic = topic;
         }
         
-        public async void PostMessage(string message, string uniqueKey)
+        public async void PostMessage(string message, string idBrOffice)
         {
             try
             {
                 // Отправка сообщения
-                await _producer.ProduceAsync(_topic, new Message<string, string> { Key = uniqueKey, Value = message });
+                await _producer.ProduceAsync(_topic, new Message<string, string> { Key = idBrOffice, Value = message });
 
                 // Закрытие продюсера
                 _producer.Flush();

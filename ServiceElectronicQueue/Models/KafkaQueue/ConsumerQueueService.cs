@@ -9,8 +9,6 @@ public class ConsumerQueueService
 {
     private readonly IConsumer<string, string> _consumer;
     private readonly string _topic;
-    private readonly List<KafkaMessageClientToBranchOffice> _allClients = new();
-
 
     public ConsumerQueueService(IConsumer<string, string> consumer, string topic)
     {
@@ -18,55 +16,41 @@ public class ConsumerQueueService
         _topic = topic;
     }
 
-    public List<KafkaMessageClientToBranchOffice> GetAllMessage(string uniqueKey)
+    public void GetAllMessage(string idBrOffice)
     {
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         // Подписка на топик
-        _consumer.Subscribe(ConfigKafka.Topic);
-        while (true)
-        {
-            var consumeResult = _consumer.Consume(CancellationToken.None);
-            if (consumeResult != null)
-            {
-                // Распарсить Json, сделать проверку на первичный ключ
-                var message = JsonConvert.DeserializeObject<KafkaMessageClientToBranchOffice>(consumeResult.Message.Value);
-                if (!_allClients.Any(c => c.IdClient == message.IdClient))
-                {
-                    _allClients.Add(message);
-                }
-                // Подтверждаем получение сообщения
-                _consumer.Commit(consumeResult); 
-            }
-            else
-            {
-                // Выход из цикла, если больше нет сообщений
-                break; 
-            }
-        }
-        return _allClients;
-    }
-    
-    public List<KafkaQuery> GetMessagesAsync()
-    {
-        DateTime startTime = DateTime.Now;
-        TimeSpan duration = TimeSpan.FromSeconds(5);
-        var messages = new List<KafkaQuery>();
-
-        _consumer.Subscribe(ConfigKafka.Topic);
-        while (DateTime.Now - startTime < duration)
+        _consumer.Subscribe(_topic);
+        while (!cts.IsCancellationRequested)
         {
             try
             {
-                var consumeResult = _consumer.Consume(TimeSpan.FromSeconds(1));
+                // Получение сообщения
+                ConsumeResult<string, string>? consumeResult = _consumer.Consume(cts.Token);
                 if (consumeResult != null)
                 {
-                    messages.Add(JsonSerializer.Deserialize<KafkaQuery>(consumeResult.Message.Value)!);
+                    if (consumeResult.Message.Key == idBrOffice)
+                    {
+                        var message = JsonConvert.DeserializeObject<KafkaMessageClientToBranchOffice>(consumeResult.Message.Value);
+                        if (!CollectionElectronicQueue._allClients.Any(c => c.IdClient == message.IdClient))
+                        {
+                            CollectionElectronicQueue._allClients.Add(message);
+                        }
+                        // Подтверждение получения сообщения
+                        //_consumer.Commit(consumeResult); 
+                    }
+                }
+                else
+                {
+                    // Выход из цикла, если больше нет сообщений
+                    break; 
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка при чтении из Kafka: {ex.Message}");
+                Console.WriteLine($"Ошибка при получении сообщения: {ex.Message}");
+                break;
             }
         }
-        return messages;
     }
 }

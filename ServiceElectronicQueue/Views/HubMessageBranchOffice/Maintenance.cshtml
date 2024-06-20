@@ -1,5 +1,28 @@
 ﻿
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.Maintenance
+
 <h1>Идёт обслуживание.</h1>
-<form asp-controller="HubMessageBranchOffice" asp-action="EndService" method="post">
-    
-</form>
+
+@switch (Model.Status)
+{
+    case "Готов к обслуживанию":
+        <div style="text-align: center">
+            <h2>Клиент номер: @Model.NumberQueue</h2>
+            <h3>@Model.Status</h3>
+            <form asp-controller="HubMessageBranchOffice" asp-action="StartService" method="post">
+                <button type="submit" class="btn btn-primary">Начать обслуживание</button>
+            </form><br/>
+        </div>
+    break;
+
+    case "Начало обслуживания":
+        <div style="text-align: center">
+            <h2>Клиент номер: @Model.NumberQueue</h2>
+            <h3>Идёт обслуживание...</h3>
+            <form asp-controller="HubMessageBranchOffice" asp-action="EndService" method="post">
+                <button type="submit" class="btn btn-primary">Закончить обслуживание</button>
+            </form><br/>
+        </div>
+    break;
+}

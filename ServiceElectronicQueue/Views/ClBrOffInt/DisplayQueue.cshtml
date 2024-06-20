@@ -1,21 +1,45 @@
-﻿@model ServiceElectronicQueue.Models.JsonModels.TransmittingUrl.ServiceDisplayQueueUrl
-
+﻿@model ServiceElectronicQueue.Models.JsonModels.TransmittingUrl.ClientDisplayQueue
 <div style="text-align: center">
-    <h2>Ваш номер: @Model.NumberQueue</h2>
-    @if (Model.Status == QueueStatusStatic.Status[0])
-    {
-        <h3>Ожидайте</h3>
-    }
-    @if (Model.Status == QueueStatusStatic.Status[1])
-    {
-        <h3>Ваш номер готов к обслуживанию</h3>
-    }
-    @if (Model.Status == QueueStatusStatic.Status[2])
-    {
-        <h3>В обслуживании</h3>
-    }
-    @if (Model.Status == QueueStatusStatic.Status[3])
-    {
-        <h3>Обслуживание закончено, хорошего дня!</h3>
-    }
+    <h2>Ваш номер: <span id="queue-number">@Model.NumberQueue</span></h2>
+    <div id="queue-status">
+        @if (Model.Status == QueueStatusStatic.Status[0])
+        {
+            <h3>Ожидайте</h3>
+        }
+        @if (Model.Status == QueueStatusStatic.Status[1])
+        {
+            <h3>Ваш номер готов к обслуживанию</h3>
+        }
+        @if (Model.Status == QueueStatusStatic.Status[2])
+        {
+            <h3>В обслуживании</h3>
+        }
+        @if (Model.Status == QueueStatusStatic.Status[3])
+        {
+            <h3>Обслуживание закончено, хорошего дня!</h3>
+        }
+    </div>
 </div>
+
+<script>
+    function updateQueueInfo() {
+        fetch('/ClBrOffInt/DisplayQueueForAjax/')
+            .then(response => response.json())
+            .then(queueData => {
+                document.getElementById('queue-number').textContent = queueData.NumberQueue;
+                const queueStatusDiv = document.getElementById('queue-status');
+                queueStatusDiv.innerHTML = '';
+
+                if (queueData.Status === QueueStatusStatic.Status[0]) {
+                    queueStatusDiv.innerHTML = '<h3>Ожидайте</h3>';
+                } else if (queueData.Status === QueueStatusStatic.Status[1]) {
+                    queueStatusDiv.innerHTML = '<h3>Ваш номер готов к обслуживанию</h3>';
+                } else if (queueData.Status === QueueStatusStatic.Status[2]) {
+                    queueStatusDiv.innerHTML = '<h3>В обслуживании</h3>';
+                } else if (queueData.Status === QueueStatusStatic.Status[3]) {
+                    queueStatusDiv.innerHTML = '<h3>Обслуживание закончено, хорошего дня!</h3>';
+                }
+            });
+    }
+    setInterval(updateQueueInfo, 10000);
+</script>

@@ -15,7 +15,8 @@
     <form asp-controller="BranchOfficeAccount" asp-action="GenerateUniqueLink" method="post">
         <button type="submit" class="btn btn-primary">Создать уникальную ссылку на элкутронную очерель филиала</button>
     </form><br/>
-    <form asp-controller="HubMessageBranchOffice" asp-action="ElectronicQueueClients" method="post">
+    
+    <form asp-controller="BranchOfficeAccount" asp-action="BranchOfficeToElectronicQueueClients" method="post">
         <button type="submit" class="btn btn-primary">Обслуживание клиентов</button>
     </form><br/>
 </div>

@@ -6,6 +6,7 @@ using ServiceElectronicQueue.Models.DataBaseCompany.Patterns;
 using ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement;
 using ServiceElectronicQueue.Models.ForViews.BranchOfficeManagement.ServicesAndElectronicQueue;
 using ServiceElectronicQueue.Models.JsonModels;
+using ServiceElectronicQueue.Models.JsonModels.TransmittingHttp;
 using ServiceElectronicQueue.Models.JsonModels.TransmittingUrl;
 using ServiceElectronicQueue.Models.KafkaQueue;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -32,6 +33,7 @@ namespace ServiceElectronicQueue.Controllers
         [HttpGet]
         public IActionResult ClientServiceDisplay(Guid BrOffCli)
         {
+            _httpContextAccessor.HttpContext.Session.Clear();
             var brOffice = _unitOfWork.BranchesRep.GetAll()
                 .FirstOrDefault(s => s.IdBranchOffice == BrOffCli);
             var org = _unitOfWork.OrganizationsRep.GetAll()
@@ -51,7 +53,7 @@ namespace ServiceElectronicQueue.Controllers
 
             _httpContextAccessor.HttpContext!.Session.SetString(
                 "ClientRecordToQueue", JsonSerializer.Serialize(brOffice.IdBranchOffice));
-            
+
             return View(model);
         }
 
@@ -70,15 +72,15 @@ namespace ServiceElectronicQueue.Controllers
                 var producer = new ProducerQueueService(KafkaFactory.CreateProducer(), ConfigKafka.Topic);
                 var numberQueue = Rand.Str(2);
                 Guid idElectronicQueue = Guid.NewGuid();
-                string uniqueKeyKafka = JsonConvert.SerializeObject(new KafkaKey
-                    {IdBranchOfficeKafka = idBrOffice, IdQueueKafka = idElectronicQueue});
                 producer.PostMessage(JsonConvert.SerializeObject(new KafkaMessageClientToBranchOffice(
-                    idElectronicQueue, numberQueue, numberService, serviceSector.Service)), uniqueKeyKafka);
+                        idElectronicQueue, numberQueue, numberService, serviceSector.Service)),
+                    JsonConvert.SerializeObject(idBrOffice));
 
                 var brOffice = _unitOfWork.BranchesRep.GetByIndex(idBrOffice);
                 var service = _unitOfWork.ServicesRep.GetAll()
-                    .FirstOrDefault(s => s.IdBranchOffice == brOffice.IdBranchOffice);
-                
+                    .FirstOrDefault(
+                        s => s.IdBranchOffice == brOffice.IdBranchOffice && s.NumberService == numberService);
+
                 DateTime dateTime = DateTime.UtcNow;
                 ElectronicQueue electronicQueue = new ElectronicQueue
                 {
@@ -90,28 +92,55 @@ namespace ServiceElectronicQueue.Controllers
                 };
                 _unitOfWork.ElectronicQueueRep.Create(electronicQueue);
                 _unitOfWork.Save();
-            
-                var serviceClientUrl = JsonSerializer.Serialize(
-                    new ServiceDisplayQueueUrl{IdBrOffice = idBrOffice, NumberQueue = numberQueue, Status = QueueStatusStatic.Status[0]});
-                return RedirectToAction("DisplayQueue", new { serviceClientUrl});
+
+                _httpContextAccessor.HttpContext!.Session.SetString("ClientDisplayQueue", JsonSerializer.Serialize(
+                    new ClientHttp
+                    {
+                        IdBranchOffice = idBrOffice,
+                        IdService = service.IdServices,
+                        IdQueue = idElectronicQueue
+                    }));
+
+                return RedirectToAction("DisplayQueue");
             }
 
             Guid BrOffCli = idBrOffice;
             return RedirectToAction("ClientServiceDisplay", new { BrOffCli });
         }
-        
-        
-        
-        public IActionResult DisplayQueue(string serviceClientUrl)
+
+
+        public IActionResult DisplayQueue()
         {
-            ServiceDisplayQueueUrl serviceDisplayQueueUrl =
-                JsonSerializer.Deserialize<ServiceDisplayQueueUrl>(serviceClientUrl)!;
-            
-            return View();
+            ClientHttp clientHttp = JsonSerializer.Deserialize<ClientHttp>(_httpContextAccessor.HttpContext!.Session
+                .GetString("ClientDisplayQueue")!)!;
+            ElectronicQueue electronicQueue = _unitOfWork.ElectronicQueueRep.GetAll()
+                .First(s => s.IdElectronicQueue == clientHttp.IdQueue && s.IdServices == clientHttp.IdService);
+            ClientDisplayQueue model = new ClientDisplayQueue
+            {
+                NumberQueue = electronicQueue.NumberInQueue,
+                Status = electronicQueue.Status
+            };
+            return View(model);
         }
         
         
-        
+        [HttpGet]
+        [Route("/ClBrOffInt/DisplayQueueForAjax")]
+        public IActionResult DisplayQueueForAjax()
+        {
+            ClientHttp clientHttp = JsonSerializer.Deserialize<ClientHttp>(_httpContextAccessor.HttpContext!.Session
+                .GetString("ClientDisplayQueue")!)!;
+            ElectronicQueue electronicQueue = _unitOfWork.ElectronicQueueRep.GetAll()
+                .First(s => s.IdElectronicQueue == clientHttp.IdQueue && s.IdServices == clientHttp.IdService);
+            ClientDisplayQueue model = new ClientDisplayQueue
+            {
+                NumberQueue = electronicQueue.NumberInQueue,
+                Status = electronicQueue.Status
+            };
+            return Json(model);
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             _unitOfWork.Dispose();
