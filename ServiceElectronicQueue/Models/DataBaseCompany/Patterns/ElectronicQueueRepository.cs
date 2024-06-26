@@ -31,8 +31,32 @@ namespace ServiceElectronicQueue.Models.DataBaseCompany.Patterns
             var unitOfWork = new UnitOfWorkCompany(_db);
             var oldElectQueue = unitOfWork.ElectronicQueueRep.GetByIndex(id);
             oldElectQueue.NumberInQueue = newItem.NumberInQueue;
-            oldElectQueue.Status = newItem.Status;
-            oldElectQueue.DateAndTimeStatus = newItem.DateAndTimeStatus;
+            oldElectQueue.IdStatus = newItem.IdStatus;
+            oldElectQueue.PendingServiceDateTime = newItem.PendingServiceDateTime;
+            oldElectQueue.ReadyServiceDateTime = newItem.ReadyServiceDateTime;
+            oldElectQueue.StartServiceDateTime = newItem.StartServiceDateTime;
+            oldElectQueue.EndServiceDateTime = newItem.EndServiceDateTime;
+        }
+        
+        public void UpdateReadyService(Guid id, ElectronicQueue newItem)
+        {
+            var unitOfWork = new UnitOfWorkCompany(_db);
+            var oldElectQueue = unitOfWork.ElectronicQueueRep.GetByIndex(id);
+            oldElectQueue.ReadyServiceDateTime = newItem.ReadyServiceDateTime;
+        }
+        
+        public void UpdateStartService(Guid id, ElectronicQueue newItem)
+        {
+            var unitOfWork = new UnitOfWorkCompany(_db);
+            var oldElectQueue = unitOfWork.ElectronicQueueRep.GetByIndex(id);
+            oldElectQueue.StartServiceDateTime = newItem.StartServiceDateTime;
+        }
+        
+        public void UpdateEndService(Guid id, ElectronicQueue newItem)
+        {
+            var unitOfWork = new UnitOfWorkCompany(_db);
+            var oldElectQueue = unitOfWork.ElectronicQueueRep.GetByIndex(id);
+            oldElectQueue.EndServiceDateTime = newItem.EndServiceDateTime;
         }
 
         public void Delete(Guid id)

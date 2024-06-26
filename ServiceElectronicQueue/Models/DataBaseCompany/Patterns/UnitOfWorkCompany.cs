@@ -10,6 +10,7 @@
         private BranchOfficeRepository _branchRepository;
         private RoleRepository _roleRepository;
         private ServicesRepository _servicesRepository;
+        private StatusRepository _statusRepository;
         private ElectronicQueueRepository _electronicQueueRepository;
 
         public OrganizationRepository OrganizationsRep
@@ -59,6 +60,16 @@
                 if (_servicesRepository == null)
                     _servicesRepository = new ServicesRepository(_db);
                 return _servicesRepository;
+            }
+        }
+        
+        public StatusRepository StatusRep
+        {
+            get
+            {
+                if (_statusRepository == null)
+                    _statusRepository = new StatusRepository(_db);
+                return _statusRepository;
             }
         }
         

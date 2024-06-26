@@ -86,8 +86,9 @@ namespace ServiceElectronicQueue.Controllers
                 {
                     IdElectronicQueue = idElectronicQueue,
                     NumberInQueue = numberQueue,
-                    Status = QueueStatusStatic.Status[0],
-                    DateAndTimeStatus = dateTime,
+                    IdStatus = _unitOfWork.StatusRep.GetAll()
+                        .Where(s => s.Status == "В ожидании").Select(s => s.IdStatus).First(),
+                    PendingServiceDateTime = dateTime,
                     IdServices = service.IdServices
                 };
                 _unitOfWork.ElectronicQueueRep.Create(electronicQueue);
@@ -118,7 +119,9 @@ namespace ServiceElectronicQueue.Controllers
             ClientDisplayQueue model = new ClientDisplayQueue
             {
                 NumberQueue = electronicQueue.NumberInQueue,
-                Status = electronicQueue.Status
+                Status = _unitOfWork.StatusRep.GetAll()
+                    .Where(s => s.IdStatus == electronicQueue.IdElectronicQueue)
+                    .Select(s => s.Status).First()
             };
             return View(model);
         }
@@ -135,7 +138,9 @@ namespace ServiceElectronicQueue.Controllers
             ClientDisplayQueue model = new ClientDisplayQueue
             {
                 NumberQueue = electronicQueue.NumberInQueue,
-                Status = electronicQueue.Status
+                Status = _unitOfWork.StatusRep.GetAll()
+                    .Where(s => s.IdStatus == electronicQueue.IdElectronicQueue)
+                    .Select(s => s.Status).First()
             };
             return Json(model);
         }

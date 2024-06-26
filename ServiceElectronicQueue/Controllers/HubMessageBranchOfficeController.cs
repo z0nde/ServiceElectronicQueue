@@ -38,7 +38,7 @@ namespace ServiceElectronicQueue.Controllers
             var consumer = new ConsumerQueueService(KafkaFactory.CreateConsumer(
                 new ConfigConsumer(JsonConvert.SerializeObject(idBrOffice))), ConfigKafka.Topic);
 
-            var items = _unitOfWork.ElectronicQueueRep.GetAll().Where(s => s.Status == QueueStatusStatic.Status[0]).ToList();
+            /*var items = _unitOfWork.ElectronicQueueRep.GetAll().Where(s => s.Status == QueueStatusStatic.Status[0]).ToList();
             foreach (var item in items)
             {
                 CollectionElectronicQueue._allClients.Add(new KafkaMessageClientToBranchOffice
@@ -48,9 +48,9 @@ namespace ServiceElectronicQueue.Controllers
                     Service = _unitOfWork.ServicesRep.GetAll().Where(s => s.IdServices == item.IdServices).Select(s => s.Service).First(),
                     IdClient = item.IdElectronicQueue
                 });
-            }
+            }*/
             
-            //consumer.GetAllMessage(JsonConvert.SerializeObject(idBrOffice));
+            consumer.GetAllMessage(JsonConvert.SerializeObject(idBrOffice));
             
             var model = CollectionElectronicQueue._allClients;
             
@@ -107,11 +107,12 @@ namespace ServiceElectronicQueue.Controllers
             {
                 IdElectronicQueue = Guid.NewGuid(),
                 NumberInQueue = electronicQueue.NumberInQueue,
-                Status = QueueStatusStatic.Status[1],
-                DateAndTimeStatus = dateTime,
+                IdStatus = _unitOfWork.StatusRep.GetAll()
+                    .Where(s => s.Status == "Готов к обслуживанию").Select(s => s.IdStatus).First(),
+                ReadyServiceDateTime = dateTime,
                 IdServices = electronicQueue.IdServices
             };
-            _unitOfWork.ElectronicQueueRep.Create(newElQueue);
+            _unitOfWork.ElectronicQueueRep.UpdateReadyService(electronicQueue.IdElectronicQueue, newElQueue);
             _unitOfWork.Save();
 
             ParserTransmittingDataContainerWithQueue
@@ -136,7 +137,9 @@ namespace ServiceElectronicQueue.Controllers
             var model = new Maintenance
             {
                 NumberQueue = electronicQueue.NumberInQueue,
-                Status = electronicQueue.Status
+                Status = _unitOfWork.StatusRep.GetAll()
+                    .Where(s => s.IdStatus == electronicQueue.IdStatus)
+                    .Select(s => s.Status).First()
             };
             
             containerWithQueue.ParseSerializeGet(user, branchOffice, electronicQueue);
@@ -155,11 +158,12 @@ namespace ServiceElectronicQueue.Controllers
             {
                 IdElectronicQueue = Guid.NewGuid(),
                 NumberInQueue = electronicQueue.NumberInQueue,
-                Status = QueueStatusStatic.Status[2],
-                DateAndTimeStatus = dateTime,
+                IdStatus = _unitOfWork.StatusRep.GetAll()
+                    .Where(s => s.Status == "Начало обслуживания").Select(s => s.IdStatus).First(),
+                ReadyServiceDateTime = dateTime,
                 IdServices = electronicQueue.IdServices
             };
-            _unitOfWork.ElectronicQueueRep.Create(newElQueue);
+            _unitOfWork.ElectronicQueueRep.UpdateStartService(electronicQueue.IdElectronicQueue, newElQueue);
             _unitOfWork.Save();
            
             containerWithQueue.ParseSerializeGet(user, branchOffice, newElQueue);
@@ -178,11 +182,12 @@ namespace ServiceElectronicQueue.Controllers
             {
                 IdElectronicQueue = Guid.NewGuid(),
                 NumberInQueue = electronicQueue.NumberInQueue,
-                Status = QueueStatusStatic.Status[2],
-                DateAndTimeStatus = dateTime,
+                IdStatus = _unitOfWork.StatusRep.GetAll()
+                    .Where(s => s.Status == "Конец обслуживания").Select(s => s.IdStatus).First(),
+                ReadyServiceDateTime = dateTime,
                 IdServices = electronicQueue.IdServices
             };
-            _unitOfWork.ElectronicQueueRep.Create(newElQueue);
+            _unitOfWork.ElectronicQueueRep.UpdateEndService(electronicQueue.IdElectronicQueue, newElQueue);
             _unitOfWork.Save();
 
             DataComeFrom userAuthStatus = new DataComeFrom(0);
